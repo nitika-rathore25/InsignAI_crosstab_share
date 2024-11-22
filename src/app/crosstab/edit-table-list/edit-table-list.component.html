@@ -1,0 +1,1287 @@
+<app-header></app-header>
+
+<app-auth-modal *ngIf="systemSr?.moveToLogin == true"></app-auth-modal>
+
+<app-reset-password *ngIf="systemSr?.resetPass == true || systemSr?.periodic == true"></app-reset-password>
+
+<app-download-all *ngIf="systemSr?.downloadHistory == true"></app-download-all>
+
+<app-insights-center *ngIf="systemSr?.insightsModal == true"></app-insights-center>
+
+<div class="main mt-3">
+  <div class="container-fluid">
+    <div class="col-lg-12 pl-0 mt-2 mb-2">
+      <!-- <button class="btn submit_btn ml-2" (click)="navigateUrl('text-optics')"><i class="fa fa-chevron-left"></i>&nbsp;
+        Text Optics </button> -->
+      <!-- <button class="btn submit_btn ml-2" (click)="navigateUrl('output')"><i class="fa fa-chevron-left"></i>&nbsp;
+        Dashboard </button> -->
+      <button class="btn submit_btn" (click)="navigateUrl('/')"><i class="fa fa-chevron-left"></i>&nbsp;
+        Banner Listing </button>
+    </div>
+    <div class="row head_under mx-2 pb-0">
+      <div class="w-20 px-0 py-1 ">
+        <div class="text-center ">
+          <h6 class="text-left pl-5">Outline</h6>
+        </div>
+      </div>
+      <div class="w-80 mid_bg  py-2 pb-0 d-flex">
+        <div class="col-6 my-auto">
+          <h6 class="pl-2">
+            Currently Viewing: <b>{{masterData?.bannerInfo?.title}}</b>
+          </h6>
+        </div>
+        <div class="col-3 my-auto">
+          <h6 class="pl-2 fw-bold">Total
+            N={{masterData?.completeCount}}
+          </h6>
+        </div>
+        <div class="col-2 py-2 pt-0 text-right">
+          <!-- <button class="btn blue_btn" matTooltip="Add custom table" (click)="openAddModal()"
+            *ngIf="tableList.length > 0 && masterData?.grp != 'ke'">Add Custom Table
+          </button> -->
+
+          <!-- <button class="btn blue_btn ml-2" matTooltip="Banner Settings" (click)="openSetModal()"
+            *ngIf="tableList.length > 0 && masterData?.grp != 'ke'">Banner Settings
+          </button> -->
+          <button class="btn btn blue_btn ml-2 mr-2 dropdown-toggle" data-toggle="dropdown" id="cross_down"
+            matTooltip="Click to download all tables" *ngIf="tableList.length > 0">Export All
+          </button>
+          <div class="dropdown">
+            <div class="dropdown-menu btn_cross">
+              <li>
+                <a class="dropdown-item cursor-pointer mt-1" (click)="downloadExcel()" id="cross_down">
+                  <i class="fa fa-file-excel-o"></i><span>Download All</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item cursor-pointer mt-1" (click)="getDownloadHistory()">
+                  <i class="fa fa-download"></i><span>all exports</span>
+                </a>
+              </li>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+    <div class="row mx-2">
+      <div class="w-20 pt-3">
+        <div class="list-group border-0 mr-2" *ngFor="let table of tableList">
+          <a class="list-group-item list-group-item-action border-0 clr_blue ml-2 list_margin p-1 outline_text cursor-pointer res_pd"
+            (click)="scrollTo(table)">{{table.title}}</a>
+        </div>
+      </div>
+
+      <div class="w-80 mid_bg pt-3 p-4">
+        <ng-container *ngIf="tableList.length > 0">
+          <div class="col-lg-12">
+            <mat-accordion>
+              <mat-expansion-panel hideToggle *ngFor="let ques of tableList" class="my-3 shadow-sm"
+                id="scrl_{{ques.qID}}" [expanded]="ques?.isOpen == true">
+                <mat-expansion-panel-header style="height: auto;" class="py-2 p-0">
+                  <mat-panel-title class="d-block">
+                    <div class="d-block clr_blue" style="background: white">
+                      <span [innerHTML]="ques.title" class="d-block">{{ques.title}} </span>
+                    </div>
+                  </mat-panel-title>
+                  <mat-panel-description class="mr-0">
+                    <div class="w-100 d-flex" *ngIf="ques?.row_data">
+                      <!-- style="margin-left: 46rem;" -->
+                      <!-- <button class="blue_btn cursor-pointer btn bottom-auto ml-auto"
+                        matTooltip="Click to edit: {{ques.qID}}" (click)="editQuestionModal(ques)"
+                        *ngIf="masterData?.grp != 'ke'">Edit</button> -->
+                      <!-- <i class="fa fa-refresh edit_icon mr_4 cursor-pointer add_{{ques.qID}} bottom-auto"
+                     matTooltip="Click to reload: {{ques.qID}}" (click)="reloadTable(ques)"></i> -->
+                      <button class=" btn blue_btn ml-auto cursor-pointer add_{{ques.qID}} bottom-auto"
+                        matTooltip="Click to download: {{ques.qID}}" (click)="downloadCrosstab(ques)">Export</button>
+                      <!-- <i class="fa-solid fa-trash-can red_color fs-5 ml-2 "
+                                   style="top: 4px!important; position: relative"></i> -->
+                    </div>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="m-2 px-3">
+                  <span [innerHTML]="ques.description" style="font-weight: normal;">{{ques.description}}</span>
+                  <div class="table-responsive">
+                    <table class="table border-none mt-1" style="border: 0;" *ngIf="ques?.banner_points?.length">
+                      <!-- <thead *ngIf="ques?.banner_points.length > 0">
+                        <tr *ngIf="(segArrSaved[0] | json) != '{}'">
+                          <th>
+                          </th>
+                          <ng-container *ngFor="let item of segArrSaved[0] | keyvalue">
+                            <th class="text-center" attr.colspan="{{segArrSaved[0][item.key].length}}"
+                              style="background: #f7f7f7;">
+                              {{item.key | titlecase}}
+                            </th>
+                          </ng-container>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgb(197, 191, 191)">
+                          <th></th>
+                          <ng-container *ngIf="(segArrSaved[0] | json) != '{}'">
+                            <ng-container *ngFor="let item of segArrSaved[0] | keyvalue">
+                              <th *ngFor="let seg of segArrSaved[0][item.key]" class="text-center"
+                                style="background: #f7f7f7;">
+                                {{seg.title | titlecase}} <br>
+                                <span class="clr_red">{{seg.alpha | titlecase}}</span>
+                              </th>
+                            </ng-container>
+                          </ng-container>
+                          <ng-container *ngIf="(segArrSaved[1] | json) != '{}'">
+                          <ng-container *ngFor="let item of segArrSaved[1] | keyvalue">
+                            <th *ngFor="let seg of segArrSaved[1][item.key]" class="text-center"
+                              style="background: #f7f7f7;">
+                              {{seg.title | titlecase}} <br>
+                              <span class="clr_red">{{seg.alpha | titlecase}}</span>
+                            </th>
+                          </ng-container>
+                          </ng-container>
+                        </tr>
+                      </thead> -->
+                      <thead *ngIf="ques?.banner_points.length > 0">
+                        <tr *ngIf="(segArrSaved[0] | json) != '{}'">
+                           <th>
+                           </th>
+                           <ng-container *ngFor="let item of segArrSaved">
+                              <th class="text-center" attr.colspan="{{item.value.length}}"
+                                 style="background: #f7f7f7;">
+                                 {{item.name | titlecase}}
+                              </th>
+                           </ng-container>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgb(197, 191, 191)">
+                           <th></th>
+                           <ng-container *ngIf="segArrSaved.length">
+                              <ng-container *ngFor="let item of segArrSaved">
+                                 <th *ngFor="let seg of item.value" class="text-center"
+                                    style="background: #f7f7f7;">
+                                    {{seg.title | titlecase}} <br>
+                                    <span class="clr_red">{{seg.alpha | titlecase}}</span>
+                                 </th>
+                              </ng-container>
+                           </ng-container>
+
+                        </tr>
+                     </thead>
+                      <!-- <tbody class="px-3">
+                        <tr *ngFor="let qt of ques.row_data._row_order">
+                          <td style="width: 40%;">{{ques['row_data']['_rows'][qt]}}</td>
+                          <ng-container *ngIf="(segArrSaved[0] | json) != '{}'">
+                            <ng-container *ngFor="let column of segArrSaved[0] | keyvalue">
+                              <td *ngFor="let cols of segArrSaved[0][column.key]" class="text-center"
+                                [ngStyle]="{ 'width': (60 / ques.banner_points.length) + '%'  }">
+                                <div *ngIf="ques['row_data']['data'][qt][cols.pointID]">
+                                  <div class="text-center"
+                                    *ngIf="settingList?.percent == 1 && qt != 'r-mean' && qt != 'r-median' && qt != 'r-stdev'">
+                                    {{ques['row_data']['data'][qt][cols.pointID]}}
+                                  </div>
+
+                                  <div class="text-center"
+                                    *ngIf="(settingList?.percent == 1 || settingList?.count == 1) && (qt == 'r-mean' || qt == 'r-median' || qt == 'r-stdev')">
+                                    {{ques['row_data']['data'][qt][cols.pointID]}}
+                                  </div>
+
+                                  <div class="text-center"
+                                    *ngIf="settingList?.count == 1 && qt != 'r-mean' && qt != 'r-median' && qt != 'r-stdev'">
+                                    {{ques['row_data']['data_count'][qt][cols.pointID]}}
+                                  </div>
+
+                                  <div class="text-center clr_red">
+                                    {{ques['row_data']['sigtest'][qt][cols.pointID]}}
+                                  </div>
+                                </div>
+                                <div *ngIf="(ques['row_data']['data'][qt] | json) == '{}'">
+                                  0%
+                                </div>
+                              </td>
+                            </ng-container>
+                          </ng-container>
+
+                          <ng-container *ngFor="let column of segArrSaved[1] | keyvalue">
+                            <td *ngFor="let cols of segArrSaved[1][column.key]" class="text-center"
+                              [ngStyle]="{ 'width': (60 / ques.banner_points.length) + '%'  }">
+                              <div *ngIf="ques['row_data']['data'][qt][cols.pointID]">
+                                <div class="text-center"
+                                  *ngIf="settingList?.percent == 1 && qt != 'r-mean' && qt != 'r-median' && qt != 'r-stdev'">
+                                  {{ques['row_data']['data'][qt][cols.pointID]}}
+                                </div>
+
+                                <div class="text-center"
+                                  *ngIf="(settingList?.percent == 1 || settingList?.count == 1) && (qt == 'r-mean' || qt == 'r-median' || qt == 'r-stdev')">
+                                  {{ques['row_data']['data'][qt][cols.pointID]}}
+                                </div>
+
+                                <div class="text-center"
+                                  *ngIf="settingList?.count == 1 && qt != 'r-mean' && qt != 'r-median' && qt != 'r-stdev'">
+                                  {{ques['row_data']['data_count'][qt][cols.pointID]}}
+                                </div>
+
+                                <div class="text-center clr_red">
+                                  {{ques['row_data']['sigtest'][qt][cols.pointID]}}
+                                </div>
+                              </div>
+                              <div *ngIf="(ques['row_data']['data'][qt] | json) == '{}'">
+                                0%
+                              </div>
+                            </td>
+                          </ng-container>
+                        </tr>
+                      </tbody> -->
+                      
+                      <tbody class="px-3">
+                        <tr>
+                           <td class="text-end pe-2" style="width: 40%;">Base</td>
+                           <ng-container *ngIf="segArrSaved.length">
+                              <ng-container *ngFor="let item of segArrSaved">
+                                 <td *ngFor="let cols of item.value" class="text-center fnt_bold">
+                                    {{ques['row_data']['base'][cols.pointID]}}
+                                 </td>
+                              </ng-container>
+                           </ng-container>
+                        </tr>
+
+                        <tr *ngFor="let qt of ques.row_data._row_order">
+                           <td style="width: 40%;">{{ques['row_data']['_rows'][qt]}}</td>
+                           <ng-container *ngIf="segArrSaved.length">
+                              <ng-container *ngFor="let column of segArrSaved">
+                                 <td *ngFor="let cols of column.value" class="text-center"
+                                    [ngStyle]="{ 'width': (60 / ques.banner_points.length) + '%'  }">
+                                    <div *ngIf="ques['row_data']['data'][qt][cols.pointID]">
+                                       <div class="text-center"
+                                          *ngIf="settingList?.percent == 1 && qt != 'r-mean' && qt != 'r-median' && qt != 'r-stdev'">
+                                          {{ques['row_data']['data'][qt][cols.pointID]}}
+                                       </div>
+
+                                       <div class="text-center"
+                                          *ngIf="(settingList?.percent == 1 || settingList?.count == 1) && (qt == 'r-mean' || qt == 'r-median' || qt == 'r-stdev')">
+                                          {{ques['row_data']['data'][qt][cols.pointID]}}
+                                       </div>
+
+                                       <div class="text-center"
+                                          *ngIf="settingList?.count == 1 && qt != 'r-mean' && qt != 'r-median' && qt != 'r-stdev'">
+                                          {{ques['row_data']['data_count'][qt][cols.pointID]}}
+                                       </div>
+
+                                       <div class="text-center clr_red">
+                                          {{ques['row_data']['sigtest'][qt][cols.pointID]}}
+                                       </div>
+                                    </div>
+                                    <div *ngIf="(ques['row_data']['data'][qt] | json) == '{}'">
+                                       0%
+                                    </div>
+                                 </td>
+                              </ng-container>
+                           </ng-container>
+                        </tr>
+                     </tbody>
+                    </table>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </ng-container>
+
+        <div class="col-lg-12" *ngIf="tableList.length > 0">
+          <div class="toast show" id="showToast" style="position: fixed;right: 4rem;bottom: 5rem;width:20%">
+            <div class="toast-header">
+              Table progress
+            </div>
+            <div class="toast-body text-center">
+              <div class="progress" *ngIf="tableList.length > 0 && apiCounter < tableList.length">
+                <div class="progress-bar" [ngStyle]="{ 'width': progress + '%'  }">{{progress}}%</div>
+              </div>
+              <p *ngIf="tableList.length > 0 && apiCounter == tableList.length" style="color: #000;">
+                All tables data loaded successfully
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" [ngStyle]="{'display':display}"></div>
+
+<div class="modal mt-2" [ngStyle]="{'display':display}" *ngIf="settingsModal == true">
+  <div class="modal-dialog" style="max-width: 65%">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header" style="padding: 10px;background-color: #fff;">
+        <h4 class="modal-title ellip"><i class="fa fa-cogs"></i> Banner Settings: {{settingList?.title}}</h4>
+        <button type="button" class="close cross_btn" (click)="closeSetModal('settingsModal')">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body m_body">
+        <div class="row">
+          <div class="col-lg-12 mb-3">
+            <div class="form-group">
+              <label>Banner Name</label>
+              <input type="text" class="form-control" id="baner_name" value="{{settingList?.title}}"
+                placeholder="Enter banner title ...">
+            </div>
+          </div>
+
+          <div class="col-lg-8 mb-3">
+            <div class="form-group">
+              <label>Banner Description</label>
+              <textarea type="text" rows="1" class="form-control" id="banner_desc" value="{{settingList?.description}}"
+                placeholder="Enter banner escription ..."></textarea>
+            </div>
+          </div>
+
+          <div class="col-lg-4 pl-0 mb-3">
+            <div class="form-group">
+              <label>Stat Testing</label>
+              <input type="text" class="form-control" id="stat_test" value="{{settingList?.statGroup}}"
+                placeholder="eg. AB,C-F">
+            </div>
+          </div>
+
+          <div class="col-lg-12 mb-2">
+            <label>Select View Type</label>
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="custom-control custom-checkbox mb-2 ml_l_3">
+                  <input type="checkbox" class="custom-control-input" id="count_type"
+                    [checked]="settingList?.count == 1" name="question">
+                  <label class="custom-control-label cursor-pointer" for="count_type">
+                    <div class="ml-2">
+                      Counts
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="custom-control custom-checkbox mb-2 ml_l_3">
+                  <input type="checkbox" class="custom-control-input" id="per_type"
+                    [checked]="settingList?.percent == 1" name="question">
+                  <label class="custom-control-label cursor-pointer" for="per_type">
+                    <div class="ml-2">
+                      Percentage
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12 mb-3">
+            <label>Overall Banner Filter <small>(optional)</small></label>
+            <div class="form-group mb-1" *ngIf="settingList?.bannerList_logic">
+              <div *ngFor="let lgic of settingList?.bannerList_logic; let i=index;">
+                <div class="ml-2">
+                  {{i+1}}: <span [innerHTML]="lgic.pointLogic" class="clr_red">{{lgic.pointLogic}}</span>
+                  <span>
+                    <i class="fa fa-trash clr_red ml-5" (click)="removeExistLogicBanner(i)"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12 p-0 text-center">
+              <div class="banner_logical root mt-1 br_logic"
+                *ngFor="let rw of addLogicArr; let i= index;let last = last">
+                <div class="banner-parent-class-logic row">
+                  <div class="w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form question clr_red" id="cond{{i}}"
+                        (change)="selectedValue($event,i)">
+                        <option value="">Select variables</option>
+                        <optgroup label="{{access.key}}" *ngFor="let access of logicVars|keyvalue">
+                          <option *ngFor="let items of logicVars[access.key]" value="{{items.code}}"
+                            attr.data="{{items.show}}" ariaLabel={{items.param}}>{{items.show}}</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedArrG[i]>0" class="col-lg-2 mr-5 w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select options custom-form clr_red" id="operator{{i}}" style="border: none;"
+                        (change)="selectedValueOptions($event,i)">
+                        <option value="">Select options</option>
+                        <option *ngFor="let ops of selectedArrOptions[i]" value="{{ops.code}}">{{ops.show}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="w-auto">
+                    <div class="form-group mb-0" *ngIf="selectedOptions[i+'len']==0 || selectedArrG[i]==0">
+                      <select class="form-select custom-form operator clr_red" id="andOper{{i}}">
+                        <option value="">Select operator</option>
+                        <option *ngFor="let oper of logicOperators" value="{{oper.code}}">{{oper.show}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 w-auto" *ngIf="selectedOptions[i+'len']>0 && selectedArrG[i]>0">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form  subOption clr_red" style="border: none;"
+                        id="options{{i}}">
+                        <option value="">Select </option>
+                        <option *ngFor="let option of selectedOptions[i+'option']" value="{{option.code}}">
+                          {{option.show}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-1 w-auto" *ngIf="selectedOptions[i+'len'] == 0 || selectedArrG[i]==''">
+                    <div class="form-group mb-0">
+                      <input autocomplete="off" class="form-control custom-form value clr_red" type="text"
+                        placeholder="Enter value" maxlength="100" id="invalue{{i}}">
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 text-center w-auto">
+                    <i class="fa fa-expand clr_blue ml-2 p-2 undo_btn" (click)="addAndOrLogic(rw)"
+                      matTooltip="Add add/or condition"></i>
+                    <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetLogic(i)"
+                      matTooltip="Click here to reset"></i>
+                    <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="removeLogicCond(i)" *ngIf="i > 0"
+                      matTooltip="Delete logic"></i>
+                    <i class="fa fa-plus ml-2 p-2 add_btn undo_btn" (click)="addLogicCondition()" *ngIf="i == 0"
+                      matTooltip="Add logic"></i>
+                  </div>
+                </div>
+
+                <div *ngIf="rw.options">
+                  <div class="row banner-child-class-logic root mt-1"
+                    *ngFor="let and of rw.options;let j= index;let last = last">
+                    <div class="ml-5 w-auto">
+                      <div class="form-group mb-0">
+                        <select class="form-select custom-form andoroperator clr_red" id="andor{{j}}{{i}}">
+                          <option value=" AND ">AND</option>
+                          <option value=" OR ">OR</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="w-auto">
+                      <div class="form-group mb-0">
+                        <select class="form-select custom-form question clr_red" id="varand{{j}}{{i}}"
+                          (change)="selectedAdditionalValue($event,j,i)">
+                          <option value="">Select variables</option>
+                          <optgroup label="{{access.key}}" *ngFor="let access of logicVars|keyvalue">
+                            <option *ngFor="let items of logicVars[access.key]" value="{{items.code}}"
+                              attr.data="{{items.show}}" ariaLabel="{{items.param}}">{{items.show}}
+                            </option>
+                          </optgroup>
+                        </select>
+                      </div>
+                    </div>
+                    <div *ngIf="selectedArrG1[j+''+i]" class="w-auto">
+                      <div class="form-group mb-0">
+                        <select class="form-select custom-form options clr_red" id="v{{j}}{{i}}"
+                          (change)="selectedAdditionalOptions($event,j,i)">
+                          <option value="">Select options</option>
+                          <option *ngFor="let it of selectedArrOptions1[j+''+i]" value="{{it.code}}">
+                            {{it.show}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="w-auto">
+                      <div class="form-group mb-0"
+                        *ngIf="selectedOptions1[j+''+i+'len']==0 || selectedArrG1[j+''+i]==''">
+                        <select class="form-select custom-form operator clr_red" id="andOper{{j}}{{i}}">
+                          <option value="">Select operator</option>
+                          <option *ngFor="let opert of logicOperators" value="{{opert.code}}">
+                            {{opert.show}}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-2 mr-3 w-auto" *ngIf="selectedOptions1[j+''+i+'len']>0">
+                      <div class="form-group mb-0">
+                        <select class="form-select custom-form subOption clr_red" style="border: none;"
+                          id="op{{j}}{{i}}">
+                          <option value="">Select </option>
+                          <option *ngFor="let optionSub of selectedOptions1[j+''+i+'option']"
+                            value="{{optionSub.code}}">{{optionSub.show}}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-1 w-auto"
+                      *ngIf="selectedOptions1[j+''+i+'len'] == 0 || selectedArrG1[j+''+i]==''">
+                      <div class="form-group mb-0">
+                        <input autocomplete="off" class="form-control custom-form value clr_red" type="text"
+                          placeholder="Enter value" maxlength="100" id="invalue{{j}}{{i}}">
+                      </div>
+                    </div>
+
+
+                    <div class="col-lg-3 text-center auto">
+                      <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetLogicAnd(j,i)"></i>
+                      <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="removeAndOrLogic(rw,j)"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body h_card">
+                <div *ngIf="settingList?.bannerPoint.length > 0">
+                  <h6>Banner Preview</h6>
+                  <div class="table-responsive cs_scroll">
+                    <table class="table table-bordered mb-1 mt-3">
+                      <tbody>
+                        <tr *ngIf="savedGroup[0]">
+                          <ng-container *ngFor="let item of savedGroup[0] | keyvalue">
+                            <th class="text-center" attr.colspan="{{savedGroup[0][item.key].length}}">
+                              {{item.key | titlecase}}
+                            </th>
+                          </ng-container>
+                        </tr>
+
+                        <tr>
+                          <ng-container *ngIf="savedGroup[0]">
+                            <ng-container *ngFor="let item of savedGroup[0] | keyvalue">
+                              <th *ngFor="let seg of savedGroup[0][item.key]" class="text-center">
+                                {{seg.title | titlecase}} <br>
+                                <span class="clr_red">{{seg.alpha | titlecase}}</span>
+                              </th>
+                            </ng-container>
+                          </ng-container>
+
+                          <ng-container *ngFor="let item of savedGroup[1] | keyvalue">
+                            <th *ngFor="let seg of savedGroup[1][item.key]" class="text-center">
+                              {{seg.title | titlecase}} <br>
+                              <span class="clr_red">{{seg.alpha | titlecase}}</span>
+                            </th>
+                          </ng-container>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div *ngIf="settingList?.bannerPoint.length == 0" class="mt-5 text-center">
+                  <h6>No banner point listed.</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12 mt-1">
+            <div class="card">
+              <div class="card-body h_card">
+                <h6 class="mb-3" data-toggle="collapse" data-target="#getQues_list">Question list</h6>
+
+                <div id="getQues_list" class="collapse show">
+                  <div class="custom-control custom-checkbox mb-2 ml_l_3">
+                    <input type="checkbox" class="custom-control-input" id="select_set_ques"
+                      [checked]="savedQuesList.length == tableQuestionList.length" name="question"
+                      (click)="selectAllSet($event)">
+                    <label class="custom-control-label" for="select_set_ques">
+                      <div class="ml-2">
+                        Select All Questions
+                      </div>
+                    </label>
+                  </div>
+
+                  <div id="accordion" role="tablist">
+                    <div *ngFor="let ques of tableQuestionList">
+                      <div role="tab" id="headingOne">
+                        <h4 class="label_head_tab d-inline-block w-100">
+                          <div class="row">
+                            <div class="col-lg-1 pr-0">
+                              <div class="custom-control custom-checkbox mb-0 d-inline-block">
+                                <input type="checkbox" class="custom-control-input settingQues"
+                                  [checked]="quesChecked[ques.qID] == ques.qID" id="{{ques.qID}}" name="question"
+                                  (click)="singleSetQues()">
+                                <label class="custom-control-label" for="{{ques.qID}}">
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-lg-11 pl-0">
+                              <a class="label_head" data-toggle="collapse" data-parent="#accordion"
+                                href="#collapseOne{{ques.qID}}" aria-expanded="true"
+                                aria-controls="collapseOne{{ques.qID}}">
+                                <div [innerHTML]="ques.qLabel" class="mt-1">{{ques.qLabel}}</div>
+                              </a>
+                            </div>
+                          </div>
+                        </h4>
+                      </div>
+
+                      <div id="collapseOne{{ques.qID}}" class="collapse in" role="tabpanel"
+                        aria-labelledby="headingOne">
+                        <div class="card-block p-2 ml-3">
+                          <span [innerHTML]="ques.qText">{{ques.qText}}</span>
+                          <div [innerHTML]="ques.ri" class="mt-1 fnt_italic">{{ques.ri}}</div>
+
+                          <div *ngIf="ques.rowOptionList.length > 0" class="mt-1">
+                            <ul>
+                              <li *ngFor="let op of ques.rowOptionList">
+                                <span [innerHTML]="op.optionText">{{op.optionText}}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="tableQuestionList?.length == 0" class="mt-5 text-center">
+                    <h6>No question list found.</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn submit_btn" (click)="saveBannerSettings()">Save Banner Settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit question Modal -->
+<div class="modal mt-2" [ngStyle]="{'display':display}" *ngIf="editModal == true">
+  <div class="modal-dialog" style="max-width: 70%">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header" style="padding: 10px;background-color: #fff;">
+        <h4 class="modal-title ellip" [innerHTML]="editQuestion?.title">{{editQuestion?.title}}</h4>
+        <button type="button" class="close cross_btn" (click)="closeSetModal('editModal')">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" style="height: calc(100vh - 210px) !important;overflow: auto;">
+        <div class="mt-2 mb-3">
+          <label class="label_custom"><span class="clr_red">*</span> Table Label<Label></Label></label>
+          <div class="ml-3">
+            <input class="form-control" value="{{editQuestion.title}}" id="q_{{editQuestion?.qID}}">
+          </div>
+        </div>
+        <div class="mt-2 mb-3">
+          <label class="label_custom"><span class="clr_red">*</span> Table Text</label>
+          <div class="ml-3">
+            <input class="form-control" value="{{editQuestion.description}}" id="q_Text{{editQuestion?.qID}}">
+          </div>
+        </div>
+
+        <!-- Add logic -->
+        <div class="mt-2 mb-3">
+          <label class="label_custom"><span class="clr_red">*</span> Table Logic</label>
+          <div class="ml-3">
+            <div *ngIf="editQuestion?.logic.length > 0">
+              <div *ngFor="let lgic of editQuestion?.logic; let a=index">
+                {{a+1}}.
+                <span [innerHTML]="lgic.pointLogic" class="clr_red">
+                  {{lgic.pointLogic}}
+                </span>
+                <span class="ml-4 cursor-pointer" matTooltip="Click to remove: {{lgic.pointLogic}}"
+                  (click)="removeExistLogic(a)"><i class="fa fa-trash-o clr_red cursor-pointer"></i></span>
+                <br>
+              </div>
+            </div>
+
+            <div class="logical root br_logic" *ngFor="let rw of addLogicArr; let i= index;let last = last">
+              <div class="parent-class-logic row">
+                <div class="w-auto">
+                  <div class="form-group mb-0">
+                    <select class="form-select custom-form question clr_red" id="cond{{i}}"
+                      (change)="selectedValue($event,i)">
+                      <option value="">Select variables</option>
+                      <optgroup label="{{access.key}}" *ngFor="let access of logicVars|keyvalue">
+                        <option *ngFor="let items of logicVars[access.key]" value="{{items.code}}"
+                          attr.data="{{items.show}}" ariaLabel={{items.param}}>{{items.show}}</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+
+                <div *ngIf="selectedArrG[i]>0" class="col-lg-2 mr-5" class="w-auto">
+                  <div class="form-group mb-0">
+                    <select class="form-select options custom-form clr_red" id="operator{{i}}" style="border: none;"
+                      (change)="selectedValueOptions($event,i)">
+                      <option value="">Select options</option>
+                      <option *ngFor="let ops of selectedArrOptions[i]" value="{{ops.code}}">{{ops.show}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="w-auto">
+                  <div class="form-group mb-0" *ngIf="selectedOptions[i+'len']==0 || selectedArrG[i]==0">
+                    <select class="form-select custom-form operator clr_red" id="andOper{{i}}">
+                      <option value="">Select operator</option>
+                      <option *ngFor="let oper of logicOperators" value="{{oper.code}}">{{oper.show}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-lg-2 w-auto" *ngIf="selectedOptions[i+'len']>0 && selectedArrG[i]>0">
+                  <div class="form-group mb-0">
+                    <select class="form-select custom-form  subOption clr_red" style="border: none;" id="options{{i}}">
+                      <option value="">Select </option>
+                      <option *ngFor="let option of selectedOptions[i+'option']" value="{{option.code}}">
+                        {{option.show}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-lg-1 w-auto" *ngIf="selectedOptions[i+'len'] == 0 || selectedArrG[i]==''">
+                  <div class="form-group mb-0">
+                    <input autocomplete="off" class="form-control custom-form value clr_red" type="text"
+                      placeholder="Enter value" maxlength="100" id="invalue{{i}}">
+                  </div>
+                </div>
+
+                <div class="col-lg-3 text-center w-auto">
+                  <i class="fa fa-expand clr_blue ml-2 p-2 undo_btn" (click)="addAndOrLogic(rw)"
+                    matTooltip="Add add/or condition"></i>
+                  <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetLogic(i)" matTooltip="Click here to reset"></i>
+                  <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="removeLogicCond(i)" *ngIf="i > 0"
+                    matTooltip="Delete logic"></i>
+                  <i class="fa fa-plus ml-2 p-2 add_btn undo_btn" (click)="addLogicCondition()" *ngIf="i == 0"
+                    matTooltip="Add logic"></i>
+                </div>
+              </div>
+
+              <div *ngIf="rw.options">
+                <div class="row child-class-logic root mt-1"
+                  *ngFor="let and of rw.options;let j= index;let last = last">
+                  <div class="ml-5 w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form andoroperator clr_red" id="andor{{j}}{{i}}">
+                        <option value=" AND ">AND</option>
+                        <option value=" OR ">OR</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form question clr_red" id="varand{{j}}{{i}}"
+                        (change)="selectedAdditionalValue($event,j,i)">
+                        <option value="">Select variables</option>
+                        <optgroup label="{{access.key}}" *ngFor="let access of logicVars|keyvalue">
+                          <option *ngFor="let items of logicVars[access.key]" value="{{items.code}}"
+                            attr.data="{{items.show}}" ariaLabel="{{items.param}}">{{items.show}}</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+                  <div *ngIf="selectedArrG1[j+''+i]" class="w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form options clr_red" id="v{{j}}{{i}}"
+                        (change)="selectedAdditionalOptions($event,j,i)">
+                        <option value="">Select options</option>
+                        <option *ngFor="let it of selectedArrOptions1[j+''+i]" value="{{it.code}}">
+                          {{it.show}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="w-auto">
+                    <div class="form-group mb-0" *ngIf="selectedOptions1[j+''+i+'len']==0 || selectedArrG1[j+''+i]==''">
+                      <select class="form-select custom-form operator clr_red" id="andOper{{j}}{{i}}">
+                        <option value="">Select operator</option>
+                        <option *ngFor="let opert of logicOperators" value="{{opert.code}}">{{opert.show}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 mr-3 w-auto" *ngIf="selectedOptions1[j+''+i+'len']>0">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form subOption clr_red" style="border: none;" id="op{{j}}{{i}}">
+                        <option value="">Select </option>
+                        <option *ngFor="let optionSub of selectedOptions1[j+''+i+'option']" value="{{optionSub.code}}">
+                          {{optionSub.show}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-1 w-auto" *ngIf="selectedOptions1[j+''+i+'len'] == 0 || selectedArrG1[j+''+i]==''">
+                    <div class="form-group mb-0">
+                      <input autocomplete="off" class="form-control custom-form value clr_red" type="text"
+                        placeholder="Enter value" maxlength="100" id="invalue{{j}}{{i}}">
+                    </div>
+                  </div>
+
+
+                  <div class="col-lg-3 text-center w-auto">
+                    <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetLogicAnd(j,i)"></i>
+                    <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="removeAndOrLogic(rw,j)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="mainDropArr.length > 0">
+          <div class="col-lg-12">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="6" class="text-right">
+                      <button (click)="addRowOption()" class="btn create_btn"><i class="fa fa-plus"></i>
+                        Create
+                        Row</button>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th style="width: 5%;">Re-order</th>
+                    <th style="width: 5%;">Show</th>
+                    <th style="width: 10%;">Row ID</th>
+                    <th style="width: 60%;">Row Title</th>
+                    <th style="width: 10%;"></th>
+                    <th style="width: 10%;"></th>
+                  </tr>
+                </thead>
+                <tbody cdkDropList (cdkDropListDropped)="drop($event, mainDropArr)">
+                  <tr *ngFor="let op of mainDropArr; let last= last; let i=index;">
+                    <td cdkDrag class="text-center example-box" style="width: 5%;">
+                      <div *cdkDragPlaceholder class="example-custom-placeholder"></div>
+                      <i class="fa fa-arrows mt-2" style="font-size: 16px;"></i>
+                    </td>
+
+                    <td class="text-center" style="width: 5%;">
+                      <div class="custom-control custom-checkbox mt-2">
+                        <input type="checkbox" class="custom-control-input" id="op_show_{{i}}" name="options"
+                          [checked]="op.op_show == 1">
+                        <label class="custom-control-label" for="op_show_{{i}}"></label>
+                      </div>
+                    </td>
+
+                    <td class="text-center" style="width: 10%;vertical-align: middle;">
+                      {{op?.id | uppercase}}
+                    </td>
+
+                    <td style="width: 60%;">
+                      <input class="form-control" id="op_{{i}}" value="{{op.optionText}}">
+                      <div class="show_net_{{op?.newID}}" *ngIf="op?.net_val == 1 && op?.old_q == 0"
+                        [ngClass]="{ 'd-none': op?.showRw == 1 && op?.old_q == 0 && (op.net | json) == '{}' }">
+                        <div class="d-inline-block mr-3" *ngFor="let main of mainDropArr; let k=index;">
+                          <div class="custom-control custom-checkbox mt-2 d-inline-block" *ngIf="main?.old_q == 1">
+                            <input type="checkbox" class="custom-control-input net_type{{i}}" id="netShow{{k}}{{i}}"
+                              [checked]="op.net[main.id]" value="{{main.id}}" name="options">
+                            <label class="custom-control-label" for="netShow{{k}}{{i}}">{{main.id}}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td style="width: 10%;">
+                      <div class="form-group" *ngIf="op?.old_q == 0">
+                        <select class="form-select" id="rowType_{{i}}" (change)="getType($event,op)"
+                          [disabled]="(op?.net_val == 1 && (op.net | json) != '{}') || (op?.mean == 1 && (op.net | json) != '{}') || (op?.median == 1 && (op.net | json) != '{}') || (op?.stdev == 1 && (op.net | json) != '{}')">
+                          <option value="">Select Type</option>
+                          <option value="Net" [selected]="op?.net_val == 1 && (op.net | json) != '{}'" *ngIf="qType != 'percentage-row-list' && qType != 'numeric-row-list'">Net
+                          </option>
+                          <option value="Mean" [selected]="op?.mean == 1 && (op.net | json) != '{}'">Mean
+                          </option>
+                          <option value="Median" [selected]="op?.median == 1 && (op.net | json) != '{}'" *ngIf="qType != 'percentage-row-list' && qType != 'numeric-row-list'">
+                            Median</option>
+                          <option value="Standard Deviation" [selected]="op?.stdev == 1 && (op.net | json) != '{}'" *ngIf="qType != 'percentage-row-list' && qType != 'numeric-row-list'">
+                            Standard Deviation</option>
+                        </select>
+                      </div>
+                    </td>
+
+                    <td class="text-center" style="width: 10%;vertical-align: middle;">
+                      <i class="fa fa-trash-o clr_red" (click)="removeRowoption(i)"></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn submit_btn" (click)="saveTableQuestion()">Update Table</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add question Modal -->
+<div class="modal mt-2 mb-2" [ngStyle]="{'display':display}" *ngIf="addModal == true">
+  <div class="modal-dialog" style="max-width: 85%">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header" style="padding: 10px;background-color: #fff;">
+        <h4 class="modal-title ellip">Add Custom Table</h4>
+        <button type="button" class="close cross_btn" (click)="closeSetModal('addModal')">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" style="height: calc(100vh - 210px) !important;overflow: auto;">
+        <div class="mt-2 mb-3">
+          <label class="label_custom"><span class="clr_red">*</span> Table Label<Label></Label></label>
+          <div class="ml-3">
+            <input class="form-control" value="" id="q_label" placeholder="Enter label">
+          </div>
+        </div>
+        <div class="mt-2 mb-3">
+          <label class="label_custom"><span class="clr_red">*</span> Table Text</label>
+          <div class="ml-3">
+            <input class="form-control" value="" id="q_table_Text" placeholder="Enter text">
+          </div>
+        </div>
+
+        <!-- Add logic -->
+        <div class="mt-2 mb-3">
+          <label class="label_custom"> Table Logic</label>
+          <div class="ml-3">
+            <div class="logical root br_logic" *ngFor="let rw of addLogicArr; let i= index;let last = last">
+              <div class="parent-class-logic row">
+                <div class="w-auto">
+                  <div class="form-group mb-0">
+                    <select class="form-select custom-form question clr_red" id="cond{{i}}"
+                      (change)="selectedValue($event,i)">
+                      <option value="">Select variables</option>
+                      <optgroup label="{{access.key}}" *ngFor="let access of logicVars|keyvalue">
+                        <option *ngFor="let items of logicVars[access.key]" value="{{items.code}}"
+                          attr.data="{{items.show}}" ariaLabel={{items.param}}>{{items.show}}</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+
+                <div *ngIf="selectedArrG[i]>0" class="col-lg-2 mr-5 w-auto">
+                  <div class="form-group mb-0">
+                    <select class="form-select options custom-form clr_red" id="operator{{i}}" style="border: none;"
+                      (change)="selectedValueOptions($event,i)">
+                      <option value="">Select options</option>
+                      <option *ngFor="let ops of selectedArrOptions[i]" value="{{ops.code}}">{{ops.show}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="w-auto">
+                  <div class="form-group mb-0" *ngIf="selectedOptions[i+'len']==0 || selectedArrG[i]==0">
+                    <select class="form-select custom-form operator clr_red" id="andOper{{i}}">
+                      <option value="">Select operator</option>
+                      <option *ngFor="let oper of logicOperators" value="{{oper.code}}">{{oper.show}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-lg-2 w-auto" *ngIf="selectedOptions[i+'len']>0 && selectedArrG[i]>0">
+                  <div class="form-group mb-0">
+                    <select class="form-select custom-form  subOption clr_red" style="border: none;" id="options{{i}}">
+                      <option value="">Select </option>
+                      <option *ngFor="let option of selectedOptions[i+'option']" value="{{option.code}}">
+                        {{option.show}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-lg-1 w-auto" *ngIf="selectedOptions[i+'len'] == 0 || selectedArrG[i]==''">
+                  <div class="form-group mb-0">
+                    <input autocomplete="off" class="form-control custom-form value clr_red" type="text"
+                      placeholder="Enter value" maxlength="100" id="invalue{{i}}">
+                  </div>
+                </div>
+
+                <div class="col-lg-3 text-center w-auto">
+                  <i class="fa fa-expand clr_blue ml-2 p-2 undo_btn" (click)="addAndOrLogic(rw)"
+                    matTooltip="Add add/or condition"></i>
+                  <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetLogic(i)" matTooltip="Click here to reset"></i>
+                  <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="removeLogicCond(i)" *ngIf="i > 0"
+                    matTooltip="Delete logic"></i>
+                  <i class="fa fa-plus ml-2 p-2 add_btn undo_btn" (click)="addLogicCondition()" *ngIf="i == 0"
+                    matTooltip="Add logic"></i>
+                </div>
+              </div>
+
+              <div *ngIf="rw.options">
+                <div class="row child-class-logic root mt-1"
+                  *ngFor="let and of rw.options;let j= index;let last = last">
+                  <div class="ml-5 w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form andoroperator clr_red" id="andor{{j}}{{i}}">
+                        <option value=" AND ">AND</option>
+                        <option value=" OR ">OR</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form question clr_red" id="varand{{j}}{{i}}"
+                        (change)="selectedAdditionalValue($event,j,i)">
+                        <option value="">Select variables</option>
+                        <optgroup label="{{access.key}}" *ngFor="let access of logicVars|keyvalue">
+                          <option *ngFor="let items of logicVars[access.key]" value="{{items.code}}"
+                            attr.data="{{items.show}}" ariaLabel="{{items.param}}">{{items.show}}</option>
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+                  <div *ngIf="selectedArrG1[j+''+i]" class="w-auto">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form options clr_red" id="v{{j}}{{i}}"
+                        (change)="selectedAdditionalOptions($event,j,i)">
+                        <option value="">Select options</option>
+                        <option *ngFor="let it of selectedArrOptions1[j+''+i]" value="{{it.code}}">
+                          {{it.show}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="w-auto">
+                    <div class="form-group mb-0" *ngIf="selectedOptions1[j+''+i+'len']==0 || selectedArrG1[j+''+i]==''">
+                      <select class="form-select custom-form operator clr_red" id="andOper{{j}}{{i}}">
+                        <option value="">Select operator</option>
+                        <option *ngFor="let opert of logicOperators" value="{{opert.code}}">{{opert.show}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 mr-3 w-auto" *ngIf="selectedOptions1[j+''+i+'len']>0">
+                    <div class="form-group mb-0">
+                      <select class="form-select custom-form subOption clr_red" style="border: none;" id="op{{j}}{{i}}">
+                        <option value="">Select </option>
+                        <option *ngFor="let optionSub of selectedOptions1[j+''+i+'option']" value="{{optionSub.code}}">
+                          {{optionSub.show}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-1 w-auto" *ngIf="selectedOptions1[j+''+i+'len'] == 0 || selectedArrG1[j+''+i]==''">
+                    <div class="form-group mb-0">
+                      <input autocomplete="off" class="form-control custom-form value clr_red" type="text"
+                        placeholder="Enter value" maxlength="100" id="invalue{{j}}{{i}}">
+                    </div>
+                  </div>
+
+
+                  <div class="col-lg-3 text-center w-auto">
+                    <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetLogicAnd(j,i)"></i>
+                    <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="removeAndOrLogic(rw,j)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="addCustomArr.length > 0">
+          <div class="col-lg-12">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="4" class="text-right">
+                      <button (click)="addRowOptionNewTable()" class="btn create_btn"><i class="fa fa-plus"></i> Create
+                        Row</button>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th style="width: 5%;">Row ID</th>
+                    <th style="width: 65%;">Row Title</th>
+                    <th style="width: 10%;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let op of addCustomArr; let last= last; let a=index;">
+                    <td class="text-center" style="width: 5%;vertical-align: middle;">
+                      CT-{{a+1}}
+                    </td>
+
+                    <td style="width: 65%;">
+                      <input class="form-control" id="op_Text{{a}}" value="{{op?.optionText}}"
+                        placeholder="Enter option text">
+                      <div class="show_net_{{op?.newID}}" *ngIf="op?.net_val == 1 && op?.old_q == 0"
+                        [ngClass]="{ 'd-none': op?.showRw == 1 && op?.old_q == 0 && (op.net | json) == '{}' }">
+                        <div class="d-inline-block mr-3" *ngFor="let main of mainDropArr; let k=index;">
+                          <div class="custom-control custom-checkbox mt-2 d-inline-block" *ngIf="main?.old_q == 1">
+                            <input type="checkbox" class="custom-control-input net_add_type{{a}}" id="netShow{{k}}{{a}}"
+                              [checked]="op.net[main.id]" value="{{main.id}}" name="options">
+                            <label class="custom-control-label" for="netShow{{k}}{{a}}">{{main.id}}</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12 text-left lgic_{{a}}">
+                        <div class="logical_option{{a}} root br_logic mt-1"
+                          *ngFor="let rw of op.op_logic; let i= index;let last = last">
+                          <div class="parent_class_logic{{a}} row">
+                            <div>
+                              <div class="form-group mb-0">
+                                <select class="form-select custom-form lgc_var{{a}} clr_red" id="cond{{i}}{{a}}"
+                                  (change)="selectedOption($event,i,a)">
+                                  <option value="">Select variables</option>
+                                  <optgroup label="{{access.key}}" *ngFor="let access of logic_var_op|keyvalue">
+                                    <option *ngFor="let items of logic_var_op[access.key]" value="{{items.code}}"
+                                      attr.data="{{items.show}}" ariaLabel={{items.param}}>{{items.show}}</option>
+                                  </optgroup>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div *ngIf="selected_arr[i+a]>0" class="col-lg-2 mr-5">
+                              <div class="form-group mb-0">
+                                <select class="form-select lg_options{{a}} custom-form clr_red" id="operator{{i}}{{a}}"
+                                  style="border: none;" (change)="selectedSubOptions($event,i,a)">
+                                  <option value="">Select options</option>
+                                  <option *ngFor="let ops of selected_options[i+a]" value="{{ops.code}}">{{ops.show}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div>
+                              <div class="form-group mb-0" *ngIf="show_control[i+a+'len']==0 || selected_arr[i+a]==0">
+                                <select class="form-select custom-form lg_operator{{a}} clr_red" id="andOper{{i}}{{a}}">
+                                  <option value="">Select operator</option>
+                                  <option *ngFor="let oper of logic_operators" value="{{oper.code}}">
+                                    {{oper.show}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2" *ngIf="show_control[i+a+'len']>0 && selected_arr[i+a]>0">
+                              <div class="form-group mb-0">
+                                <select class="form-select custom-form  lg_subOption{{a}} clr_red" style="border: none;"
+                                  id="options{{i}}{{a}}">
+                                  <option value="">Select </option>
+                                  <option *ngFor="let option of show_control[i+a+'option']" value="{{option.code}}">
+                                    {{option.show}}</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-1" *ngIf="show_control[i+a+'len'] == 0 || selected_arr[i+a]==''">
+                              <div class="form-group mb-0">
+                                <input autocomplete="off" class="form-control custom-form lg_value{{a}} clr_red"
+                                  type="text" placeholder="Enter value" maxlength="100" id="invalue{{i}}{{a}}">
+                              </div>
+                            </div>
+
+                            <div class="col-lg-3 text-center">
+                              <i class="fa fa-expand clr_blue ml-2 p-2 undo_btn" (click)="addOp(rw)"
+                                matTooltip="Add add/or condition"></i>
+                              <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetOpLogic(i,a)"
+                                matTooltip="Click here to reset"></i>
+                              <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="rmOpLogic(i,op)"
+                                *ngIf="i > 0" matTooltip="Delete logic"></i>
+                              <i class="fa fa-plus ml-2 p-2 add_btn undo_btn" (click)="addAnLogic(op)" *ngIf="i == 0"
+                                matTooltip="Add logic"></i>
+                            </div>
+                          </div>
+
+                          <div *ngIf="rw.options">
+                            <div class="row child_class_logic_{{a}} root mt-1"
+                              *ngFor="let and of rw.options;let j= index;let last = last">
+                              <div class="ml-5">
+                                <div class="form-group mb-0">
+                                  <select class="form-select custom-form and_operator{{a}} clr_red"
+                                    id="andor{{j}}{{i}}{{a}}">
+                                    <option value=" AND ">AND</option>
+                                    <option value=" OR ">OR</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div>
+                                <div class="form-group mb-0">
+                                  <select class="form-select custom-form lg_question_{{a}} clr_red"
+                                    id="varand{{j}}{{i}}{{a}}" (change)="slOp($event,j,i,a)">
+                                    <option value="">Select variables</option>
+                                    <optgroup label="{{access.key}}" *ngFor="let access of logic_var_op|keyvalue">
+                                      <option *ngFor="let items of logic_var_op[access.key]" value="{{items.code}}"
+                                        attr.data="{{items.show}}" ariaLabel="{{items.param}}">{{items.show}}</option>
+                                    </optgroup>
+                                  </select>
+                                </div>
+                              </div>
+                              <div *ngIf="selected_arr1[j+''+i+a]">
+                                <div class="form-group mb-0">
+                                  <select class="form-select custom-form lg_op_options{{a}} clr_red"
+                                    id="v{{j}}{{i}}{{a}}" (change)="addOpSel($event,j,i,a)">
+                                    <option value="">Select options</option>
+                                    <option *ngFor="let it of selected_options_arr[j+''+i+a]" value="{{it.code}}">
+                                      {{it.show}}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div>
+                                <div class="form-group mb-0"
+                                  *ngIf="show_control1[j+a+''+i+'len']==0 || selected_arr1[j+''+i+a]==''">
+                                  <select class="form-select custom-form lg_op_operator{{a}} clr_red"
+                                    id="andOper{{j}}{{i}}{{a}}">
+                                    <option value="">Select operator</option>
+                                    <option *ngFor="let opert of logic_operators" value="{{opert.code}}">{{opert.show}}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="col-lg-2 mr-3" *ngIf="show_control1[j+a+''+i+'len']>0">
+                                <div class="form-group mb-0">
+                                  <select class="form-select custom-form lg_op_subOption{{a}} clr_red"
+                                    style="border: none;" id="op{{j}}{{i}}{{a}}">
+                                    <option value="">Select </option>
+                                    <option *ngFor="let optionSub of show_control1[j+a+''+i+'option']"
+                                      value="{{optionSub.code}}">{{optionSub.show}}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="col-lg-1"
+                                *ngIf="show_control1[j+a+''+i+'len'] == 0 || selected_arr1[j+''+i+a]==''">
+                                <div class="form-group mb-0">
+                                  <input autocomplete="off" class="form-control custom-form lg_op_value{{a}} clr_red"
+                                    type="text" placeholder="Enter value" maxlength="100" id="invalue{{j}}{{i}}{{a}}">
+                                </div>
+                              </div>
+
+
+                              <div class="col-lg-3 text-center">
+                                <i class="fa fa-undo p-2 ml-2 undo_btn" (click)="resetopAnd(j,i,a)"></i>
+                                <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn" (click)="rmAndLgic(rw,j)"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td class="text-center" style="width: 10%;vertical-align: middle;">
+                      <i class="fa fa-trash-o clr_red" (click)="removeRowoption(i)"></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn submit_btn" (click)="saveCustomTable()">Add Custom Table</button>
+      </div>
+    </div>
+  </div>
+</div>

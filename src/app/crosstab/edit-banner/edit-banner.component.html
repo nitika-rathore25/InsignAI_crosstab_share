@@ -1,0 +1,463 @@
+<!-- <app-header></app-header>
+
+<app-auth-modal *ngIf="systemSr?.moveToLogin == true"></app-auth-modal>
+
+<app-reset-password *ngIf="systemSr?.resetPass == true || systemSr?.periodic == true"></app-reset-password>
+
+<app-insights-center *ngIf="systemSr?.insightsModal == true"></app-insights-center> -->
+
+<div class="m-2">
+  <div class="row">
+    <div class="col-lg-12 p-0">
+      <div class="col-lg-12 px-0">
+        <div class="">
+          <div class="col-lg-12 pr-2 pl-2">
+            <div class="row">
+              <div class="col-lg-12 mb-3">
+                <div class="card w-100 mb-0">
+                  <div class="card-body p-0" style="padding: 0px !important;">
+                    <div class="col-lg-12">
+                      <!-- <div class="row">
+                        <div class="col-lg-7 mt-1 pl-4">
+                          <h4 class="mt-1 ellip mb-0">
+                            {{masterData?.stdName | titlecase}}
+                          </h4>
+                          <div class="col-lg-12 mb-0 pl-0">
+                            {{masterData?.bannerInfo?.title | titlecase}} :
+                            <div class="custom_b d-inline-block mr-3">
+                              <ul class="breadcrumb">
+                                 <li (click)="navigateTodas()" matTooltip="Go to dashboard listing">Dashboard Listing</li> --
+                                <li (click)="navigateUrl('crosstab')" matTooltip="Go to banner listing">Banner list</li>
+                                <li class="active">Design Banner</li>
+                                <li (click)="navigateUrl('crosstab/table-list')" *ngIf="bannerPointList.length > 0"
+                                  matTooltip="Go to crosstab">Crosstab</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div> -->
+
+                      <div class="col-lg-12  pl-0 text-right">
+                        <!-- <button class="btn st_green ml-1 cursor_none blue_hover_color">
+                            N={{masterData?.completeCount}}
+                          </button>
+
+                          <button class="btn pl-0 st_green cursor_none blue_hover_color"
+                            *ngIf="masterData?.studyState != 'View Report'">
+                            Study Live
+                          </button>
+                          <button class="btn pl-0 clr_red cursor_none blue_hover_color"
+                            *ngIf="masterData?.studyState == 'View Report'">
+                            Study Closed
+                          </button> -->
+
+                        <button class="btn add_grp ml-1 cursor-pointer blue_hover" (click)="addGrpModal('addGrpM')"
+                          matTooltip="Click to add group name">
+                          <i class="fa fa-plus-circle"></i> Add Group
+                        </button>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-12">
+              <!-- Segment form starts here -->
+              <form [formGroup]="segmentForm">
+                <div class="row">
+                  <div class="col-lg-2 pl-4" *ngIf="segmentForm.get('segmentItems')['controls'].length > 0">
+                    <button (click)="addItem()" class="add_btn w-100" matTooltip="Click to add new banner point">
+                      <i class="fa fa-plus-circle"></i> Add point
+                    </button>
+                  </div>
+                  <div class="col-lg-10">
+                    <ul class="nav nav-tabs cs_scroll" role="tablist">
+                      <ng-container formArrayName="segmentItems"
+                        *ngFor="let item of segmentForm.get('segmentItems')['controls']; let i = index; let last=last">
+                        <li class="nav-item seg_grp{{i}}"
+                          matTooltip="{{ segmentForm.controls.segmentItems.controls[i].controls.segmentname.value | titlecase }}">
+                          <a class="nav-link seg_act{{i}} ellip wd_nav" [ngClass]=" visible == i ? 'active' : ''"
+                            data-toggle="tab" (click)="visible = i">
+                            <span class="new_seg"
+                              *ngIf="(allBannerPoint[segmentForm.controls.segmentItems.controls[i].controls.segmentname.value] != segmentForm.controls.segmentItems.controls[i].controls.segmentname.value) && (bannerPointList.length < segmentForm.get('segmentItems')['controls'].length)"></span>
+                            {{ segmentForm.controls.segmentItems.controls[i].controls.segmentname.value | titlecase }}
+                          </a>
+                        </li>
+                      </ng-container>
+                    </ul>
+                  </div>
+
+                </div>
+
+                <div class="col-lg-12 p-0">
+                  <div class="tab-content">
+                    <ng-container
+                      *ngFor="let item of segmentForm.get('segmentItems')['controls']; let i = index; let last=last">
+                      <div formArrayName="segmentItems" [ngClass]="visible == i ? 'd-block' : 'd-none'" id="seg_{{i}}"
+                        class="tab-pane seg_tab_act{{i}}" [ngClass]="{ 'active': last == true }"
+                        style="background-color: transparent;">
+                        <div [formGroupName]="i">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="card w-100">
+                                <div class="card-body" style="padding: 10px !important;">
+                                  <div class="row">
+                                    <div class="col-lg-3 mt-2">
+                                      <div class="form-group">
+                                        <label class="clr_black">Banner Point Name</label>
+                                        <input class="form-control" formControlName="segmentname"
+                                          placeholder="Enter banner point name ...">
+                                      </div>
+                                    </div>
+
+                                    <div class="col-lg-3 mt-2">
+                                      <div class="form-group" *ngIf="grpname_arr.length > 0">
+                                        <label class="clr_black">Group Name</label>
+                                        <select class="form-select" formControlName="segmentGroup"
+                                          (change)="getGroupDetails()">
+                                          <option value="">Select group</option>
+                                          <option *ngFor="let gp of grpname_arr" value="{{gp}}"
+                                            [selected]="gp == item.value.segmentGroup">{{gp | titlecase}}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-lg-6 text-right mt-1 mb-2">
+                                      <!-- <button class="btn seg_remove ml-2" (click)="addConfirm('confirm',i,item)" matTooltip="Click to delete: {{item.value.segmentname}}" *ngIf="segmentForm.get('segmentItems')['controls'].length > 1">
+                                                                                <i class="fa fa-trash-o"></i> Delete
+                                                                            </button> -->
+
+                                      <button class="btn seg_remove ml-2" (click)="removeSegment(i,item)"
+                                        matTooltip="Click to delete: {{item.value.segmentname}}"
+                                        *ngIf="segmentForm.get('segmentItems')['controls'].length > 1">
+                                        <i class="fa fa-trash-o"></i> Delete
+                                      </button>
+                                    </div>
+
+                                    <div class="col-lg-12 mt-3">
+                                      <label class="mb-0 clr_black">Banner Point Logic</label>
+                                      <div class="col-lg-12 pl-1 mb-2" *ngIf="bannerPointList[i]">
+                                        <div *ngIf="bannerPointList[i]['logic']">
+                                          <div *ngFor="let lgic of bannerPointList[i]['logic']; let a=index">
+                                            {{a+1}}.
+                                            <span [innerHTML]="lgic.pointLogic" class="clr_red">
+                                              {{lgic.pointLogic}}
+                                            </span>
+                                            <span class="ml-4 cursor-pointer"
+                                              matTooltip="Click to remove: {{lgic.pointLogic}}"
+                                              (click)="removeExistLogic(a,i)"><i
+                                                class="fa fa-trash-o clr_red cursor-pointer"></i></span> <br>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="col-lg-12 text-center pl-1">
+                                        <div class="logical root br_logic"
+                                          *ngFor="let rw of item.value.logicItems; let m=index;let last = last">
+                                          <div class="parent-class-logic row mt-1">
+                                            <div class="w-auto">
+                                              <div class="form-group mb-0">
+                                                <select class="form-select custom-form question_{{rw.logicId}} clr_red"
+                                                  id="cond{{m}}{{rw.logicId}}" (change)="selectedValue($event,rw)">
+                                                  <option value="">Select variables</option>
+                                                  <optgroup label="{{access.key}}"
+                                                    *ngFor="let access of logicVars|keyvalue">
+                                                    <option *ngFor="let items of logicVars[access.key]"
+                                                      value="{{items.code}}" attr.data="{{items.show}}"
+                                                      ariaLabel={{items.param}}>{{items.show}}</option>
+                                                  </optgroup>
+                                                </select>
+                                              </div>
+                                            </div>
+
+                                            <div *ngIf="selectedArrG['form'+rw.logicId]>0" class="col-lg-2 mr-5 w-auto">
+                                              <div class="form-group mb-0">
+                                                <select class="form-select options_{{rw.logicId}} custom-form clr_red"
+                                                  id="operator{{m}}{{rw.logicId}}" style="border: none;"
+                                                  (change)="selectedValueOptions($event,rw)">
+                                                  <option value="">Select options</option>
+                                                  <option *ngFor="let ops of selectedArrOptions['form'+rw.logicId]"
+                                                    value="{{ops.code}}">{{ops.show}}</option>
+                                                </select>
+                                              </div>
+                                            </div>
+
+                                            <div class="w-auto">
+                                              <div class="form-group mb-0"
+                                                *ngIf="selectedOptions['len'+rw.logicId]==0 || selectedArrG['form'+rw.logicId]==0">
+                                                <select class="form-select custom-form operator_{{rw.logicId}} clr_red"
+                                                  id="andOper{{m}}{{rw.logicId}}">
+                                                  <option value="">Select operator</option>
+                                                  <option *ngFor="let oper of logicOperators" value="{{oper.code}}">
+                                                    {{oper.show}}</option>
+                                                </select>
+                                              </div>
+                                            </div>
+
+                                            <div class="col-lg-2"
+                                              *ngIf="selectedOptions['len'+rw.logicId]>0 && selectedArrG['form'+rw.logicId]>0">
+                                              <div class="form-group mb-0">
+                                                <select
+                                                  class="form-select custom-form  subOption_{{rw.logicId}} clr_red"
+                                                  style="border: none;" id="options{{m}}{{rw.logicId}}">
+                                                  <option value="">Select </option>
+                                                  <option *ngFor="let option of selectedOptions['option'+rw.logicId]"
+                                                    value="{{option.code}}">{{option.show}}</option>
+                                                </select>
+                                              </div>
+                                            </div>
+
+                                            <div class="col-lg-1"
+                                              *ngIf="selectedOptions['len'+rw.logicId] == 0 || selectedArrG['form'+rw.logicId]==''">
+                                              <div class="form-group mb-0">
+                                                <input autocomplete="off"
+                                                  class="form-control custom-form value_{{rw.logicId}} clr_red"
+                                                  type="text" placeholder="Enter value" maxlength="100"
+                                                  id="invalue{{m}}{{rw.logicId}}">
+                                              </div>
+                                            </div>
+
+                                            <div class="col-lg-3 text-center">
+                                              <i class="fa fa-expand clr_blue ml-2 p-2 undo_btn"
+                                                *ngIf="selectedArrG['form'+rw.logicId]>0 || showControls[rw.logicId]"
+                                                (click)="addAndOrLogic(m,i)" matTooltip="Add add/or condition"></i>
+                                              <i class="fa fa-undo p-2 ml-2 undo_btn"
+                                                *ngIf="selectedArrG['form'+rw.logicId]>0 || showControls[rw.logicId]"
+                                                (click)="resetLogic(m,rw)" matTooltip="Click here to reset"></i>
+                                              <i class="fa fa-trash-o clr_red ml-2 p-2  delete_btn"
+                                                (click)="removeLogicCond(m,i)" *ngIf="m > 0"
+                                                matTooltip="Delete logic"></i>
+                                              <i class="fa fa-plus ml-2 p-2 undo_btn" (click)="addLogicCondition(i)"
+                                                *ngIf="m == 0 && selectedArrG['form'+rw.logicId]>0 || showControls[rw.logicId]"
+                                                matTooltip="Add logic"></i>
+                                            </div>
+                                          </div>
+
+                                          <div *ngIf="rw.options">
+                                            <div class="row child-class-logic root mt-1"
+                                              *ngFor="let and of rw.options;let j= index;let last = last">
+                                              <div class="ml-5 w-auto">
+                                                <div class="form-group mb-0">
+                                                  <select
+                                                    class="form-select custom-form andoroperator_{{and.optionId}} clr_red"
+                                                    id="andor{{j}}{{and.optionId}}">
+                                                    <option value=" AND ">AND</option>
+                                                    <option value=" OR ">OR</option>
+                                                  </select>
+                                                </div>
+                                              </div>
+                                              <div class="w-auto">
+                                                <div class="form-group mb-0">
+                                                  <select
+                                                    class="form-select custom-form question_{{and.optionId}} clr_red"
+                                                    id="varand{{j}}{{and.optionId}}"
+                                                    (change)="selectedAdditionalValue($event,and)">
+                                                    <option value="">Select variables</option>
+                                                    <optgroup label="{{access.key}}"
+                                                      *ngFor="let access of logicVars|keyvalue">
+                                                      <option *ngFor="let items of logicVars[access.key]"
+                                                        value="{{items.code}}" attr.data="{{items.show}}"
+                                                        ariaLabel="{{items.param}}">{{items.show}}</option>
+                                                    </optgroup>
+                                                  </select>
+                                                </div>
+                                              </div>
+                                              <div *ngIf="selectedArrG1['option'+and.optionId]">
+                                                <div class="form-group mb-0">
+                                                  <select
+                                                    class="form-select custom-form options_{{and.optionId}} clr_red"
+                                                    id="v{{j}}{{and.optionId}}"
+                                                    (change)="selectedAdditionalOptions($event,and)">
+                                                    <option value="">Select options</option>
+                                                    <option
+                                                      *ngFor="let it of selectedArrOptions1['option'+and.optionId]"
+                                                      value="{{it.code}}">{{it.show}}</option>
+                                                  </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="w-auto">
+                                                <div class="form-group mb-0"
+                                                  *ngIf="selectedOptions1['len'+and.optionId]==0 || selectedArrG1['option'+and.optionId]==''">
+                                                  <select
+                                                    class="form-select custom-form operator_{{and.optionId}} clr_red"
+                                                    id="andOper{{j}}{{and.optionId}}">
+                                                    <option value="">Select operator</option>
+                                                    <option *ngFor="let opert of logicOperators" value="{{opert.code}}">
+                                                      {{opert.show}}</option>
+                                                  </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-lg-2 mr-3" *ngIf="selectedOptions1['len'+and.optionId]>0">
+                                                <div class="form-group mb-0">
+                                                  <select
+                                                    class="form-select custom-form subOption_{{and.optionId}} clr_red"
+                                                    style="border: none;" id="op{{j}}{{and.optionId}}">
+                                                    <option value="">Select </option>
+                                                    <option
+                                                      *ngFor="let optionSub of selectedOptions1['option'+and.optionId]"
+                                                      value="{{optionSub.code}}">{{optionSub.show}}</option>
+                                                  </select>
+                                                </div>
+                                              </div>
+
+                                              <div class="col-lg-1"
+                                                *ngIf="selectedOptions1['len'+and.optionId] == 0 || selectedArrG1['option'+and.optionId]==''">
+                                                <div class="form-group mb-0">
+                                                  <input autocomplete="off"
+                                                    class="form-control custom-form value_{{and.optionId}} clr_red"
+                                                    type="text" placeholder="Enter value" maxlength="100"
+                                                    id="invalue{{j}}{{and.optionId}}">
+                                                </div>
+                                              </div>
+
+
+                                              <div class="col-lg-3 text-center">
+                                                <i class="fa fa-undo p-2 ml-2 undo_btn"
+                                                  (click)="resetLogicAnd(j,and)"></i>
+                                                <i class="fa fa-trash-o clr_red ml-2 p-2 delete_btn"
+                                                  (click)="removeAndOrLogic(m,j,i)"></i>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-12" *ngIf="segmentForm.get('segmentItems')['controls'].length > 0">
+                    <h6 class="ml-2 mb-2">Banner Preview</h6>
+                    <div class="table-responsive cs_scroll">
+                      <table class="table table-bordered mb-0">
+                        <tbody>
+                          <tr>
+                            <ng-container *ngFor="let item of segmentForm.get('segmentItems')['controls'];">
+                              <td style="background-color: #fff;border-right: 1px solid #dee2e6;">
+                                {{item.value.segmentname | titlecase}}
+                              </td>
+                            </ng-container>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-12 mt-3" *ngIf="savedGroup">
+                    <h6 class="ml-2 mb-2" *ngIf="grpname_arr.length > 0">Group Preview</h6>
+                    <div class="table-responsive cs_scroll">
+                      <table class="table table-bordered mb-0">
+                        <tbody>
+                          <tr>
+                            <ng-container *ngFor="let item of savedGroup | keyvalue">
+                              <th class="text-center bg_white" attr.colspan="{{savedGroup[item.key].length}}">
+                                {{item.key | titlecase}}
+                              </th>
+                            </ng-container>
+                          </tr>
+
+                          <tr>
+                            <ng-container *ngFor="let item of savedGroup | keyvalue">
+                              <td *ngFor="let seg of item.value"
+                                style="background-color: #fff;border-right: 1px solid #dee2e6;">
+                                {{seg | titlecase}}
+                              </td>
+                            </ng-container>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row text-center mt-3">
+            <div class="col-12 text-right">
+              <hr>
+              <button class="btn submit_btn ml-2 ml-2 text-right" (click)="saveBannerPointAll()"
+                matTooltip="Click to save banner points">
+                Submit &nbsp;<i class="fa fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="backdrop" [ngStyle]="{'display':display}"></div>
+
+<div class="modal" [ngStyle]="{'display':display}" style="top:2%;" *ngIf="addGrpM == true">
+  <div class="modal-dialog modal-lg" style="max-width: 20%;">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header" style="display: inline-block;">
+        <div class="col-lg-12">
+          <h5 class="modal-title ellip">Set Group Name</h5>
+          <button type="button" class="close cross_btn" (click)="closeGrpModal()"
+            style="top: 4px;position: absolute;right: 4px;">&times;</button>
+        </div>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="form-group">
+          <input type="text" autocomplete="off" class="form-control" placeholder="Enter group name" id="grp_name">
+        </div>
+      </div>
+
+      <div class="modal-footer d-inline-block">
+        <button class="btn submit_btn" (click)="addGroupToSegment()" style="float: right;">Set Group Name</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" [ngStyle]="{'display':display}" style="top:2%;" *ngIf="confirmModal == true">
+  <div class="modal-dialog modal-lg" style="max-width: 25%;">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header" style="display: inline-block;">
+        <div class="col-lg-12 p-0">
+          <h5 class="modal-title ellip">Confirm delete {{rmName}}</h5>
+          <button type="button" class="close cross_btn" (click)="closeConfirmModal()"
+            style="top: 0px;position: absolute;right: 0px;">&times;</button>
+        </div>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Are your sure want to delete <strong>{{rmName}}</strong> ?
+
+        <div class="col-lg-12 mt-3 p-0">
+          <div class="form-group">
+            <label>Please type delete in the box below to confirm</label>
+            <input type="text" autocomplete="off" class="form-control" placeholder="eg. delete" id="rm_b_point">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer d-inline-block">
+        <button class="btn submit_btn" (click)="removeSegment(rmIndex)" style="float: right;">Delete Banner
+          point</button>
+      </div>
+    </div>
+  </div>
+</div>

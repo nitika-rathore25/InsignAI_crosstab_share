@@ -1,0 +1,48 @@
+.down_btn {
+    font-size: 20px;
+    margin-top: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 2px;
+    color: #db9406;
+}
+.list_data ul {
+    list-style-type: none;
+    counter-reset: css-counters 0;
+}
+
+.list_data ul li:before {
+    counter-increment: css-counters;
+    content: counters(css-counters, ".") ". ";
+}
+
+.list_data .list-group-item {
+    line-height: 1.25rem;
+}
+.down_not {
+    cursor: not-allowed !important;
+    opacity: 0.8;
+    color: #000!important;
+}
+.sp_time {
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-left: 10px;
+}
+.clear_btn {
+    border: 2px solid #e85245;
+    color: #e85245;
+}
+.cl_btn {
+    border: 2px solid #000;
+    color: #000;
+    padding: 5px 10px 5px 10px;
+}
+.clear_btn:hover {
+    border: 2px solid #e85245;
+    color: var(--altColor2);
+    background-color: #e85245;
+}
+.bg_item {
+    background-color: #e2e2e2;
+}

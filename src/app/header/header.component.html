@@ -1,0 +1,590 @@
+<nav class="navbar navbar-expand-sm sticky-top main_card altColor2C primary_bg d-none">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <!-- <a class="navbar-brand altColor2C ">Querynest</a> -->
+      <img src="assets/favicon1 copy.png" width="69" class="mtd-2">
+      <h4 class="d-flex cursor-pointer color_white fs-2 ms-2">
+        InsignAI
+      </h4>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="ms-auto"></div>
+      <div class="mx-auto">
+        <ul class="navbar-nav me-auto order-0">
+          <!-- <li class="nav-item" (click)="navigateUrl('dashboard')" *ngIf="url != 'study-listing'">
+            <a class="nav-link altColor2C"><i class="fa fa-home mr-1 altColor2C"></i> Home</a>
+          </li>
+          <li class="nav-item" (click)="navigateUrl('input/template')" *ngIf="url != 'study-listing'">
+            <a class="nav-link altColor2C"
+              [ngClass]="{ 'nav_active': url == 'input/template' && 'altColor2_border_bottom' && 'altColor1_bg'}"><i
+                class="fa fa-list mr-1 altColor2C"></i>
+              Template</a>
+          </li> -->
+          <li class="nav-item" (click)="navigateUrl('input/survey')"
+            *ngIf="((masterData?.created_q >= 5 || questionInfo?.created_q >= 5) && (masterData?.isOwner == 1 || masterData?.isPublish == 1 || masterData?.isInput == 1) && masterData?.studyId && masterData?.hasQuestionnaire == 1 && url != 'home' && (((builderInfo != 7 || masterData.sample_feasible != 7) && masterData?.natrep == 0) || masterData?.natrep == 1)) || (masterData?.created_q >= 5 || masterData?.output == 1)">
+            <a class="nav-link altColor2C"
+              [ngClass]="{ 'nav_active': url == 'input/survey' && 'altColor2_border_bottom'  && 'altColor1_bg'}"><i
+                class="fa fa-gears mr-1 altColor2C"></i>
+              Publish Survey</a>
+          </li>
+          <li class="nav-item" (click)="navigateUrl('output')"
+            *ngIf="(masterData?.isOwner == 1 || masterData?.isOutput == 1) && masterData?.studyId && masterData?.launch == 1">
+            <a class="nav-link altColor2C"
+              [ngClass]="{ 'nav_active': url == 'output' && 'altColor2_border_bottom'  && 'altColor1_bg' }"><i
+                class="fa fa-chart-mixed mr-1 altColor2C"></i>
+              Reports</a>
+          </li>
+          <li class="nav-item" (click)="navigateUrl('/')"
+            *ngIf="(masterData?.isOwner == 1 || masterData?.isOutput == 1) && masterData?.studyId && masterData?.launch == 1">
+            <a class="nav-link altColor2C"
+              [ngClass]="{ 'nav_active': url == 'crosstab' && 'altColor2_border_bottom'  && '_bg' }"><i
+                class="fa fa-binary fa_primary_half mr-1"></i> Crosstab</a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <a class="altColor2C mr-1 cursor-pointer" data-toggle="dropdown" *ngIf="masterData.grp == 'admin'">
+          <i class="fa-sharp fa-solid fa-circle-half-stroke altColor2C" style="font-weight:bold;"
+            matTooltip="Switch Theme" (click)="getTheme()"></i>
+
+        </a>
+
+        <div class="dropdown">
+          <div class="dropdown-menu drop_pos">
+            <li *ngFor="let item of themeArray">
+              <a class="dropdown-item cursor-pointer mt-1"
+                (click)="setTheme(item.theme_id)"><span>{{item.theme_name}}</span>
+              </a>
+            </li>
+
+          </div>
+        </div>
+      </div>
+      <div>
+        <a class="altColor2C user-names mr-0 cursor-pointer" data-toggle="dropdown">
+          <i class="fa fa-user altColor2C" style="font-weight:bold;"></i> &nbsp;Anonymous
+        </a>
+        <!--
+        <div class="dropdown">
+          <div class="dropdown-menu drop_pos">
+            <li>
+              <a class="dropdown-item cursor-pointer mt-1" (click)="getRestModal()">
+                <i class="fa fa-user"></i><span>Change Password</span>
+              </a>
+            </li>
+            <li *ngIf="url != 'admin' && masterData?.grp != 'user' && masterData?.grp != 'ke'">
+              <a class="dropdown-item cursor-pointer" (click)="navigateUrl('admin')">
+                <i class="fa-duotone fa-cog"></i><span>User Management</span>
+              </a>
+            </li>
+            <li *ngIf="url != 'admin' && masterData?.grp == 'user'">
+              <a class="dropdown-item cursor-pointer" (click)="navigateUrl('team-view')">
+                <i class="fa-duotone fa-users"></i><span>Team List</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item cursor-pointer" (click)="openLogoutModal()">
+                <i class="fa-duotone fa-power-off" style="font-weight:bold;"></i><span>Logout</span>
+              </a>
+            </li>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-sm sticky-top main_card primaryC primary_bg shadow-sm py-0">
+  <div class="w-100">
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <a class="navbar-brand primaryC  header_title">
+        <img src="assets/favicon1.png" width="69" class="mtd-2">
+        <h2 class="d-flex cursor-pointer color_white fs-2 ml-2 pt-1">
+          InsignAI
+        </h2>
+      </a>
+
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="ms-auto"></div>
+      <div class="mx-auto">
+        <div class="d-flex mx-auto w-100">
+          <div class="d-block text-center mx-auto">
+            <h4 class="text-dark ellip pt-2 color_white" style="min-width: 125px;">
+              {{masterData?.stdName}}
+            </h4>
+          </div>
+        </div>
+      </div>
+      <div>
+        <a class="primaryC mr-1 cursor-pointer" data-toggle="dropdown" *ngIf="masterData.grp == 'admin'">
+          <i class="fa-sharp fa-solid fa-circle-half-stroke primaryC" style="font-weight:bold;"
+            matTooltip="Switch Theme" (click)="getTheme()"></i>
+
+        </a>
+
+        <div class="dropdown">
+          <div class="dropdown-menu drop_pos">
+            <li *ngFor="let item of themeArray">
+              <a class="dropdown-item cursor-pointer mt-1"
+                (click)="setTheme(item.theme_id)"><span>{{item.theme_name}}</span>
+              </a>
+            </li>
+
+          </div>
+        </div>
+      </div>
+      <div>
+        <a class="color_white user-names mr-0 cursor-pointer" data-toggle="dropdown">
+          <i class="fa fa-user color_white" style="font-weight:bold;"></i> &nbsp;Anonymous
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Notification for all pages -->
+<ng-container *ngIf="notification">
+  <ng-container *ngFor="let noti of notification">
+    <div class="col-lg-12 text-center" *ngIf="noti?.login_only == 0"
+      style="z-index: 99;position:absolute;bottom:0;padding:10px">
+      <div class="alert alert-secondary noti" role="alert" *ngIf="noti?.importance == 300">
+        {{noti?.message}}
+        <button type="button" class="close" (click)="dismissAlert()" data-dismiss="alert" aria-label="Close"
+          style="top:0;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="alert alert-warning noti" role="alert" *ngIf="noti?.importance == 400">
+        {{noti?.message}}
+        <button type="button" class="close" (click)="dismissAlert()" data-dismiss="alert" aria-label="Close"
+          style="top:0;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="alert alert-danger noti" role="alert" *ngIf="noti?.importance == 500">
+        {{noti?.message}}
+        <button type="button" class="close" (click)="dismissAlert()" data-dismiss="alert" aria-label="Close"
+          style="top:0;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<div class="backdrop" [ngStyle]="{'display':systemSr.display}" *ngIf="logoutModal == true || helpModal == true"></div>
+<!-- Logout confirmation Modal -->
+<div class="modal" [ngStyle]="{'display':systemSr.display}" style="top:2%;z-index: 9999;" *ngIf="logoutModal == true">
+  <div class="modal-dialog" style="max-width: 30%;">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height:520px;overflow: auto;">
+        <div class="row mb-3">
+          <div class="col-lg-11">
+            <h4 class="modal-title ellip">Confirmation</h4>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="close" (click)="closeLogoutModal()">&times;</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h5>Are your sure want to logout ?</h5>
+          </div>
+
+          <div class="col-lg-12 text-center mt-4">
+            <button class="btn submit_btn" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Learning center modal -->
+<div class="modal" [ngStyle]="{'display':systemSr.display}" style="top:2%;z-index: 1090;" *ngIf="helpModal == true">
+  <div class="modal-dialog" style="max-width: 70%;">
+    <div class="modal-content" style="border: 1px solid #522181;">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-10">
+            <h4 class="modal-title ellip m_title">Learning Center</h4>
+          </div>
+          <div class="col-lg-2 text-right">
+            <button type="button" class="close ml-3" (click)="clHelpModal()">&times;</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-2 pr-0">
+            <p *ngIf="headList.length > 0" class="cursor-pointer fnt-17 mt-1" (click)="backTofolder()"><i
+                class="fa fa-angle-left"></i> Back</p>
+          </div>
+          <div class="col-lg-8 text-center">
+            <div class="custom_b d-inline-block mr-3">
+              <!-- <ul class="breadcrumb p-0">
+                <li (click)="folderListApi()">Home</li>
+                <li *ngFor="let head of headList; let i=index; let last=last" (click)="getPrevious(i)"
+                  [ngClass]="{ 'active': last == true }">{{head}}</li>
+              </ul> -->
+            </div>
+          </div>
+          <div class="col-lg-2 text-right pl-0">
+            <button class="btn add_folder" data-toggle="dropdown"
+              *ngIf="masterData?.grp == 'manager' || masterData?.grp == 'admin'"><i class="fa fa-plus"></i> Add</button>
+            <div class="dropdown">
+              <div class="dropdown-menu ds_file">
+                <li>
+                  <a class="dropdown-item cursor-pointer mt-1" (click)="createFolder()">
+                    <i class="fa fa-folder"></i><span>Add Folder</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item cursor-pointer mt-1" (click)="addLinkModal()">
+                    <i class="fa-solid fa-video"></i><span>Add Vimeo Link</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item cursor-pointer mt-1">
+                    <div class="upload-btn-wrapper">
+                      <button class="upl_btn p-0 cursor-pointer"><i class="fa fa-upload"
+                          style="margin-right: 0.35rem!important;"></i> Upload a file</button>
+                      <input type="file" class="cursor-pointer" id="myFile" name="filename"
+                        (change)="uploadFile($event)">
+                    </div>
+                  </a>
+                </li>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mx_dy mb-3">
+          <div class="col-lg-12" *ngIf="folderList.length > 0">
+            <hr style="margin-top: 0.5rem;margin-bottom: 0.5rem;">
+          </div>
+
+          <ng-container *ngIf="folderList.length > 0">
+            <ng-container *ngFor="let list of folderList; let k=index">
+              <div class="col-lg-2 text-center cursor-pointer mb-2" *ngIf="list._type == 'folder'">
+                <div class="s_ds">
+                  <i class="fa fa-folder clr_bl" style="font-size: 4rem;" aria-hidden="true"
+                    (click)="getFolder(list._name)"></i>
+                  <i class="fa fa-ellipsis-v fnt-22 cursor-pointer elip_s" data-toggle="dropdown"
+                    *ngIf="masterData?.grp == 'manager' || masterData?.grp == 'admin'"></i>
+                  <p (click)="getFolder(list._name)"
+                    style="padding: 0px 10px 3px 10px;word-wrap: break-word;font-size: 0.9rem;">{{list._name}}</p>
+
+                  <div class="dropdown">
+                    <div class="dropdown-menu ins_file">
+                      <li>
+                        <a class="dropdown-item cursor-pointer mt-1" (click)="renameFolder(list)">
+                          <i class="fa fa-pencil-square-o clr_bl"></i><span>Rename {{list._name}}</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item cursor-pointer mt-1" (click)="removeFolder(list,k)">
+                          <i class="fa fa-trash-o clr_red"></i><span>Remove {{list._name}}</span>
+                        </a>
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2 text-center cursor-pointer mb-2" *ngIf="list._type == 'file'">
+                <div class="s_ds">
+                  <i class="{{list.file_type}} clr_bl mt-2" style="font-size: 2.7rem;" aria-hidden="true"
+                    (click)="getPdf(list)"></i>
+                  <i class="fa fa-ellipsis-v fnt-22 cursor-pointer elip_s_file" data-toggle="dropdown"
+                    *ngIf="masterData?.grp == 'manager' || masterData?.grp == 'admin'"></i>
+                  <p style="margin-top: 0.7rem;padding: 0px 2px 2px 2px;word-wrap: break-word;font-size: 0.9rem;line-height: 1.3;"
+                    (click)="getPdf(list)">{{list._name}}</p>
+
+                  <div class="dropdown">
+                    <div class="dropdown-menu ins_file">
+                      <li>
+                        <a class="dropdown-item cursor-pointer mt-1" (click)="renameFolder(list)">
+                          <i class="fa fa-pencil-square-o clr_bl"></i><span>Rename {{list._name}}</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item cursor-pointer mt-1" (click)="removeFolder(list,k)">
+                          <i class="fa fa-trash-o clr_red"></i><span>Remove {{list._name}}</span>
+                        </a>
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2 text-center cursor-pointer mb-2" *ngIf="list._type == 'vimeo'">
+                <div class="s_ds">
+                  <i class="fa-duotone fa-video clr_bl mt-2" style="font-size: 2.7rem;" aria-hidden="true"
+                    (click)="playVimeo(list)"></i>
+                  <i class="fa fa-ellipsis-v fnt-22 cursor-pointer elip_s_file" data-toggle="dropdown"
+                    *ngIf="masterData?.grp == 'manager' || masterData?.grp == 'admin'"></i>
+                  <p style="margin-top: 0.7rem;padding: 0px 2px 2px 2px;word-wrap: break-word;font-size: 0.9rem;line-height: 1.3;"
+                    (click)="playVimeo(list)">{{list._name}}</p>
+
+                  <div class="dropdown">
+                    <div class="dropdown-menu ins_file">
+                      <li>
+                        <a class="dropdown-item cursor-pointer mt-1" (click)="renameFolder(list)">
+                          <i class="fa fa-pencil-square-o clr_bl"></i><span>Rename {{list._name}}</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item cursor-pointer mt-1" (click)="removeUrl(list)">
+                          <i class="fa fa-trash-o clr_red"></i><span>Remove {{list._name}}</span>
+                        </a>
+                      </li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+
+          <div class="col-lg-12 text-center mt-5" *ngIf="folderList.length == 0">
+            <div *ngIf="apiResponsd == false">No file or folder list found.</div>
+            <div class="fa fa-spinner fa-spin spin_clr" *ngIf="apiResponsd == true"></div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="showLink == true">
+          <div class="col-lg-12 mt-2">
+            <div class="help_c cursor-pointer" (click)="openHelp()">
+              <i class="fa-duotone fa-envelope mr-2" style="color: #522181;font-size: 1rem;"></i>
+              Need more help? Send an email with your query to the team. Click here.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Help Email modal -->
+<div class="backdrop" style="z-index: 1050;" *ngIf="helpPopup == true"></div>
+<div class="modal" [ngStyle]="{'display':systemSr.display}" style="top:3%;z-index: 1099;" *ngIf="helpPopup == true">
+  <div class="modal-dialog" style="max-width: 50%;">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height:520px;overflow: auto;">
+        <div class="row mb-3">
+          <div class="col-lg-11">
+            <h4 class="modal-title ellip">Send Help Email</h4>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="close" (click)="closeHelp()">&times;</button>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-lg-12" *ngIf="masterData?.userType == 'admin' || masterData?.userType == 'manager'">
+            <span>To</span>: <span class="fnt_bold">Insign AI Team</span>
+          </div>
+          <div class="col-lg-12" *ngIf="masterData?.userType == 'user'">
+            <span>To</span>: <span class="fnt_bold">{{toInfo?.manager_data}}</span>
+          </div>
+          <div class="col-lg-12 mt-2">
+            <span>Subject</span>: <span class="fnt_bold">I need help with Insign AI</span>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <span>Message</span>:
+            <div class="form-group mt-2">
+              <label>Brief</label>
+              <input class="form-control" placeholder="Short description of your query, maximum 300 characters."
+                id="brief">
+            </div>
+            <div class="form-group">
+              <label>Detail</label>
+              <textarea class="form-control" id="detail_help" rows="5"
+                placeholder="Detail description of your query, maximum 800 characters."></textarea>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-lg-12 text-center mt-3">
+            <button class="btn help_back_btn mr-2" (click)="sendHelpEmail('sr')">
+              Send & Return
+            </button>
+            <button class="btn submit_btn" (click)="sendHelpEmail('')">Send</button>
+
+            <button class="btn submit_btn not d-none" id="lr_hlp">
+              <div class="fa fa-spinner fa-spin"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Rename modal -->
+<div class="backdrop" style="z-index: 1050;" *ngIf="renameModal == true"></div>
+<div class="modal" [ngStyle]="{'display':systemSr.display}" style="top:3%;z-index: 1099;" *ngIf="renameModal == true">
+  <div class="modal-dialog" style="max-width: 30%;">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height:520px;overflow: auto;">
+        <div class="row mb-3">
+          <div class="col-lg-11">
+            <h4 class="modal-title ellip">Rename {{renameVal._name}}</h4>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="close" (click)="clFlModal()">&times;</button>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-lg-12">
+            <input type="text" class="form-control" id="rename_fl" value="{{renameVal._name}}">
+          </div>
+          <div class="col-lg-12 text-center mt-3">
+            <button class="btn submit_btn" (click)="saveRename()" id="sp_rename" style="width: 100px;">Rename</button>
+            <button class="btn submit_btn not d-none" id="sp_cr" style="width: 100px;">
+              <div class="fa fa-spinner fa-spin"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Add Link modal -->
+<div class="backdrop" style="z-index: 1050;" *ngIf="linkModal == true"></div>
+<div class="modal" [ngStyle]="{'display':systemSr.display}" style="top:3%;z-index: 1099;" *ngIf="linkModal == true">
+  <div class="modal-dialog" style="max-width: 30%;">
+    <div class="modal-content">
+      <div class="modal-body" style="max-height:520px;overflow: auto;">
+        <div class="row mb-3">
+          <div class="col-lg-11">
+            <h4 class="modal-title ellip">Add Vimeo Link</h4>
+          </div>
+          <div class="col-lg-1">
+            <button type="button" class="close" (click)="clLinkModal()">&times;</button>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-lg-12">
+            <input type="text" class="form-control" id="link_name" (keyup)="keyHandle($event,'#link_name')"
+              placeholder="Enter name">
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="text" class="form-control" id="link_url" (keyup)="keyHandle($event,'#link_url')"
+              placeholder="Enter url">
+          </div>
+          <div class="col-lg-12 text-center mt-3">
+            <button class="btn submit_btn" (click)="saveUrl()" id="add_url" style="width: 100px;">Add</button>
+            <button class="btn submit_btn not d-none" id="sp_rt" style="width: 100px;">
+              <div class="fa fa-spinner fa-spin"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--
+<nav class="header-main d-none">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-1 mr-tp10 p-0 text-center cursor-pointer">
+                <a>
+                    <img src="https://8451inqueries.com/_temp/8451-logo.png" width="75" class="mtd-2">
+                </a>
+            </div>
+            <div class="col-sm-3 p-0">
+                <a class="header_title cursor-pointer" (click)="navigateToproducts()">CR Bridge</a>
+            </div>
+            <div class="col-sm-4 text-center cursor-pointer" (click)="navigateUrl('dashboard')">
+                <a class="header_title cursor-pointer" *ngIf="url != 'admin'">Querynest</a>
+                <a class="header_title cursor-pointer" *ngIf="url == 'admin'">User Access Management</a>
+            </div>
+            <div class="col-sm-4 text-right mr-tp-8" style="margin-top: 4px;">
+                <a class="btn sub_btn mr-2 sub_red" *ngIf="questionInfo?.remaining < 0 && masterData?.studyId && url != 'crosstab' && url != 'edit-banner' && url != 'table-list'" style="margin-top: -5px; border:none;">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    Questions created: {{questionInfo?.created_q}}, Limit: {{questionInfo?.subscription}}
+                </a>
+
+                <a class="btn sub_btn mr-2 sub_yellow" *ngIf="questionInfo?.remaining == 0 && masterData?.studyId && url != 'crosstab' && url != 'edit-banner' && url != 'table-list'" style="margin-top: -5px; border:none;">
+                    <i class="fa fa-exclamation-circle" aria-hidden="true" *ngIf="questionInfo?.remaining == 0"></i>
+                    Questions created: {{questionInfo?.created_q}}, Limit: {{questionInfo?.subscription}}
+                </a>
+
+                <a class="btn sub_btn mr-2" *ngIf="questionInfo?.remaining > 0 && masterData?.studyId && url != 'crosstab' && url != 'edit-banner' && url != 'table-list'" style="margin-top: -5px; border:none;">
+                    Questions created: {{questionInfo?.created_q}}, Limit: {{questionInfo?.subscription}}
+                </a>
+
+                <a class="btn sub_btn mr-2" *ngIf="questionInfo?.subscription && (url == 'study-listing' || url == 'dashboard') && url != 'crosstab' && url != 'edit-banner' && url != 'table-list'" style="margin-top: -5px; border:none;">
+                    Questions Limit: {{questionInfo?.subscription}}
+                </a>
+
+                <a class="clr_gray user-names cursor-pointer mr-1" (click)="showRepoModal()" *ngIf="masterData?.orgId || masterData?.org_name || insights?.orgname || masterData?.orgname">
+                    <i class="fa-duotone fa-chart-area" aria-hidden="true" matTooltip="Repository" style="font-weight:bold;"></i>
+                </a>
+
+                <a class="clr_gray user-names cursor-pointer mr-1" (click)="showHelpModal()">
+                    <i class="fa-duotone fa-circle-question fa_secondary" aria-hidden="true" matTooltip="Learning Center" style="font-weight:bold;"></i>
+                </a>
+
+                <a class="clr_gray user-names cursor-pointer mr-1" (click)="navigateUrl('dashboard')" *ngIf="url == 'admin' || url == 'team-view' || url == 'crosstab' || url == 'edit-banner' || url == 'table-list'">
+                    <i class="fa-duotone fa-home" matTooltip="Go to dashboard" style="font-weight:bold;"></i>
+                </a>
+
+                <a class="clr_gray user-names cursor-pointer mr-1" (click)="navigateUrl('output')" *ngIf="url == 'crosstab' || url == 'edit-banner' || url == 'table-list'">
+                    <i class="fa-duotone fa-clipboard" matTooltip="Go to reports" style="font-weight:bold;"></i>
+                </a>
+
+                <a class="clr_gray user-names mr-0 cursor-pointer" data-toggle="dropdown">
+                    <i class="fa fa-user" matTooltip="{{masterData?.userFname}} {{masterData?.userLname}}" style="font-weight:bold;"></i> &nbsp;{{masterData?.userFname}}
+                </a>
+                <a matTooltip="Sign Out" (click)="openLogoutModal()" class="clr_gray cursor-pointer">
+                    <i class="fa fa-power-off" style="font-weight:bold;"></i>
+                </a>
+
+                <div class="dropdown">
+                    <div class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item cursor-pointer mt-1" (click)="getRestModal()">
+                                <i class="fa fa-user"></i><span>Change Password</span>
+                            </a>
+                        </li>
+                        <li *ngIf="url != 'admin' && masterData?.grp != 'user' && masterData?.grp != 'ke'">
+                            <a class="dropdown-item cursor-pointer" (click)="navigateUrl('admin')">
+                                <i class="fa-duotone fa-cog"></i><span>User Management</span>
+                            </a>
+                        </li>
+                        <li *ngIf="url != 'admin' && masterData?.grp == 'user'">
+                            <a class="dropdown-item cursor-pointer" (click)="navigateUrl('team-view')">
+                                <i class="fa-duotone fa-users"></i><span>Team List</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item cursor-pointer" (click)="openLogoutModal()">
+                                <i class="fa-duotone fa-power-off" style="font-weight:bold;"></i><span>Logout</span>
+                            </a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav> -->
