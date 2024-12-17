@@ -26,11 +26,18 @@ export class UrlsService {
   fileUrl = 'https://querynest.com/insignai-services-v1';
 
 
-  masterUrl = "https://querynest.com";
-  url = "https://querynest.com/insignai-services-v1";
-  urlCrosstab = "https://querynest.com/insignai-services-v1/crosstabShare";
-  urlOutput = "https://querynest.com/insignai-services-v1/outputShare";
-  userApi = "https://querynest.com/insignai-services-v1/crosstabShare";
+  // masterUrl = "https://querynest.com";
+  // url = "https://querynest.com/insignai-services-v1";
+  // urlCrosstab = "https://querynest.com/insignai-services-v1/crosstabShare";
+  // urlOutput = "https://querynest.com/insignai-services-v1/outputShare";
+  // userApi = "https://querynest.com/insignai-services-v1/crosstabShare";
+
+  // dev urls
+  masterUrl = "https://dev.viewcurry.com/insign_ai_dev";
+  url = "https://dev.viewcurry.com/insign_ai_dev";
+  urlCrosstab = "https://dev.viewcurry.com/insign_ai_dev/crosstabShare";
+  urlOutput = "https://dev.viewcurry.com/insign_ai_dev/outputShare";
+  userApi = "https://dev.viewcurry.com/insign_ai_dev/crosstabShare";
 
   // *********************************END*****************************************
   // *****************************************************************************
