@@ -242,7 +242,7 @@
   margin-right: 15px;
 }
 
-.w-4 {
+.flex_shrink {
   flex-shrink: 0;
 }
 
@@ -257,4 +257,11 @@
 
 .table-first-rowbg{
 background: #f7f7f7;
+}
+
+.table_list{
+  position: fixed; 
+  right: 4rem; 
+  bottom: 5rem; 
+  width: 20%
 }

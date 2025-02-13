@@ -432,8 +432,6 @@ export class EditTableListComponent implements OnInit {
               }
             }
           }
-          else {
-          }
         });
       });
 

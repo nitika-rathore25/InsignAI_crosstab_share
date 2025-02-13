@@ -107,9 +107,7 @@
   margin-right: 15px;
 }
 
-.w-4 {
-  flex-shrink: 0;
-}
+
 
 .mat-expansion-panel-header:hover {
   background: #f5f7fb !important;
@@ -118,4 +116,63 @@
 .mat-expansion-panel-header:hover .mat-expansion-panel-header-title,
 .mat-expansion-panel-header:hover .mat-expansion-panel-header-description {
   color: #0079c1 !important;
+}
+
+.mt_2rem{
+    margin-top: 2rem;
+}
+
+
+
+.banner_modal{
+    max-width: 60%;
+}
+
+.banner_modal_body{
+    padding: 10px;
+    background-color: #fff
+}
+
+.settings_modal{
+    max-width: 65%;
+}
+
+.delete_banner{
+    top: 5%;
+    left: 4%;
+}
+
+.copy_banner{
+    max-width: 45%;
+}
+
+.share_modal{
+    top: 2%;
+}
+
+.share_modal_width{
+    max-width: 40%;
+}
+
+.share_modal_body{
+    max-height: 420px; 
+    overflow: auto
+}
+
+.word_wrap{
+    word-wrap: break-word;
+}
+
+.add_pass_width{
+    width: 50%;
+}
+
+.add_pass_content{
+    height:300px; 
+    margin: auto;
+}
+
+.add_pass_body{
+    max-height:420px;
+    overflow: auto;
 }

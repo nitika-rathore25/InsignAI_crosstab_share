@@ -10,7 +10,7 @@
 
   <app-insights-center *ngIf="systemSr?.insightsModal == true"></app-insights-center>
 
-<div class="container-fluid overflow-hidden" style="margin-top: 2rem">
+<div class="container-fluid overflow-hidden mt_2rem">
   <div class="row mb-3">
     <div class="col-12 d-flex">
     </div>
@@ -21,7 +21,7 @@
         <div class="row mb-2 px-3">
           <div class="col-lg-12">
             <div class="card mb-0 px-4 py-auto">
-              <div class="card-body p-0" style="padding: 0px !important">
+              <div class="card-body p-0">
                 <div class="col-lg-12">
                   <div class="row">
                     <div class="col-lg-7 mt-1">
@@ -94,7 +94,7 @@
                   *ngFor="let list of bannerList | appCrossFilter : searchText"
                 >
                   <div class="card h_fix px-2 radius-8 mb-0">
-                    <div class="card-body" style="padding: 10px !important">
+                    <div class="card-body p_10px">
                       <div class="row">
                         <div class="col-lg-8 pe-0">
                           <h4
@@ -201,10 +201,10 @@
   [ngStyle]="{ display: display }"
   *ngIf="addCrossTab == true"
 >
-  <div class="modal-dialog" style="max-width: 60%">
+  <div class="modal-dialog banner_modal">
     <div class="modal-content">
       <!-- Modal Header -->
-      <div class="modal-header" style="padding: 10px; background-color: #fff">
+      <div class="modal-header banner_modal_body">
         <h4 class="modal-title ellip">Add Banner: {{ masterData?.stdName }}</h4>
         <button
           type="button"
@@ -330,9 +330,8 @@
                 <div *ngIf="selectedArrG[i] > 0" class="col-lg-2 me-2 w-auto">
                   <div class="form-group mb-0">
                     <select
-                      class="form-select options custom-form clr_red"
+                      class="form-select options custom-form clr_red border-0"
                       id="operator{{ i }}"
-                      style="border: none"
                       (change)="selectedValueOptions($event, i)"
                     >
                       <option value="">Select options</option>
@@ -374,8 +373,7 @@
                 >
                   <div class="form-group mb-0">
                     <select
-                      class="form-select custom-form subOption clr_red"
-                      style="border: none"
+                      class="form-select custom-form subOption clr_red border-0"
                       id="options{{ i }}"
                     >
                       <option value="">Select</option>
@@ -520,8 +518,7 @@
                   >
                     <div class="form-group mb-0">
                       <select
-                        class="form-select custom-form subOption clr_red"
-                        style="border: none"
+                        class="form-select custom-form subOption clr_red border-0"
                         id="op{{ j }}{{ i }}"
                       >
                         <option value="">Select</option>
@@ -596,10 +593,10 @@
   [ngStyle]="{ display: display }"
   *ngIf="settingsModal == true"
 >
-  <div class="modal-dialog" style="max-width: 65%">
+  <div class="modal-dialog settings_modal">
     <div class="modal-content">
       <!-- Modal Header -->
-      <div class="modal-header" style="padding: 10px; background-color: #fff">
+      <div class="modal-header banner_modal_body">
         <h4 class="modal-title ellip">
           <i class="fa fa-cogs"></i> Banner Settings: {{ settingList?.title }}
         </h4>
@@ -753,9 +750,8 @@
                   <div *ngIf="selectedArrG[i] > 0" class="col-lg-2 me-2 w-auto">
                     <div class="form-group mb-0">
                       <select
-                        class="form-select options custom-form clr_red"
+                        class="form-select options custom-form clr_red border-0"
                         id="operator{{ i }}"
-                        style="border: none"
                         (change)="selectedValueOptions($event, i)"
                       >
                         <option value="">Select options</option>
@@ -799,8 +795,7 @@
                   >
                     <div class="form-group mb-0">
                       <select
-                        class="form-select custom-form subOption clr_red"
-                        style="border: none"
+                        class="form-select custom-form subOption clr_red border-0"
                         id="options{{ i }}"
                       >
                         <option value="">Select</option>
@@ -949,8 +944,7 @@
                     >
                       <div class="form-group mb-0">
                         <select
-                          class="form-select custom-form subOption clr_red"
-                          style="border: none"
+                          class="form-select custom-form subOption clr_red border-0"
                           id="op{{ j }}{{ i }}"
                         >
                           <option value="">Select</option>
@@ -1193,9 +1187,8 @@
 
 <!-- Confirm banner delete modal-->
 <div
-  class="modal"
+  class="modal delete_banner"
   [ngStyle]="{ display: display }"
-  style="left: 4%; top: 5%"
   *ngIf="bannerDelete == true"
 >
   <div class="modal-dialog">
@@ -1243,12 +1236,11 @@
 
 <!-- Confirm copy banner modal-->
 <div
-  class="modal"
+  class="modal delete_banner"
   [ngStyle]="{ display: display }"
-  style="left: 4%; top: 5%"
   *ngIf="copyBannerModal == true"
 >
-  <div class="modal-dialog" style="max-width: 45%">
+  <div class="modal-dialog copy_banner">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
@@ -1304,14 +1296,13 @@
 <!-- Share Crosstab modal -->
 
 <div
-  class="modal"
+  class="modal share_modal"
   [ngStyle]="{ display: display }"
-  style="top: 2%"
   *ngIf="linkModalCross == true"
 >
-  <div class="modal-dialog" style="max-width: 40%">
+  <div class="modal-dialog max_width_40">
     <div class="modal-content">
-      <div class="modal-body" style="max-height: 420px; overflow: auto">
+      <div class="modal-body share_modal_body">
         <div class="row mb-3">
           <div class="col-lg-10">
             <h4 class="modal-title ellip">Share crosstab using public link</h4>
@@ -1326,14 +1317,14 @@
           <div class="col-lg-12">
             <p>
               Click on the copy button to copy crosstab link of
-              <span style="font-weight: bold">{{ masterData?.studyName }}</span>
+              <span class="fw-bold">{{ masterData?.studyName }}</span>
             </p>
             <h4
               *ngIf="shareLinkDetail?.shareLink"
               class="cursor-pointer mt-3"
               (click)="openLink()"
             >
-              <span style="word-wrap: break-word"
+              <span class="word_wrap"
                 >Link : {{ shareLinkDetail?.shareLink }}</span
               >
             </h4>
@@ -1364,11 +1355,11 @@
 <!-- Add password` -->
 
 <div class="modal " [ngStyle]="{'display': display}" *ngIf="addPass == true">
-  <div class="modal-dialog my-auto" style="width: 50%">
+  <div class="modal-dialog my-auto add_pass_width">
     <div class="modal-content">
       <form [formGroup]="passwordForm" autocomplete="off">
-        <div class="modal-content" style="height:300px; margin: auto;">
-          <div class="modal-body" style="max-height:420px;overflow: auto;">
+        <div class="modal-content add_pass_content">
+          <div class="modal-body add_pass_body">
             <div class="row mb-3 text-center mt-4">
               <div class=" col-lg-12">
                 <h4 class="modal-title ellip">View Crosstab</h4>
