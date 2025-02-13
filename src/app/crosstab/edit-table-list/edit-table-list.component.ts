@@ -64,7 +64,9 @@ export class EditTableListComponent implements OnInit {
   show_control1 = {};
   addCustomArr = [];
   sanitizedDescription: any;
-  qType: any
+  qType: any;
+  saved_banner_list = [];
+  banner_group_list = [];
 
   constructor(private http: HttpClient, private fb: FormBuilder, public systemSr: SystemService,
     private el: ElementRef, private router: Router, private httpService: HttpService,
@@ -78,47 +80,23 @@ export class EditTableListComponent implements OnInit {
       this.settingList = this.masterData["bannerInfo"];
 
       if (this.settingList.bannerPoint.length > 0) {
-        // this.segArrSaved = [];
-        // let arrObj1 = {};
-        // let arrObj2 = {};
-        // this.settingList.bannerPoint.forEach(bannerPoint => {
-        //   if (Object.keys(arrObj1).indexOf(bannerPoint.bannerGroup.toLowerCase()) < 0 && bannerPoint.bannerGroup != "") {
-        //     arrObj1[bannerPoint.bannerGroup.toLowerCase()] = [];
-        //   }
-        //   if (bannerPoint.bannerGroup != "") {
-        //     arrObj1[bannerPoint.bannerGroup.toLowerCase()].push(bannerPoint);
-        //   }
-        // });
-        // this.segArrSaved.push(arrObj1);
-        // this.settingList.bannerPoint.forEach(bannerPoint => {
-        //   if (Object.keys(arrObj2).indexOf(bannerPoint.bannerGroup.toLowerCase()) < 0 && bannerPoint.bannerGroup == "") {
-        //     arrObj2[bannerPoint.bannerGroup.toLowerCase()] = [];
-        //   }
-        //   if (bannerPoint.bannerGroup == "") {
-        //     arrObj2[bannerPoint.bannerGroup.toLowerCase()].push(bannerPoint);
-        //   }
-        // });
-        // this.segArrSaved.push(arrObj2);
-        this.segArrSaved = [];
+        this.banner_group_list = [];
+        this.saved_banner_list = [];
+        const arrObj1 = new Map();
+        const arrObj2 = new Map();
         this.settingList.bannerPoint.forEach(bannerPoint => {
-          if (this.segArrSaved.length) {
-            if (this.segArrSaved[this.segArrSaved.length - 1].name == bannerPoint.bannerGroup.toLowerCase()) {
-              this.segArrSaved[this.segArrSaved.length - 1].value.push(bannerPoint)
-            }
-            else {
-              this.segArrSaved.push({
-                name: bannerPoint.bannerGroup.toLowerCase(), value: [bannerPoint]
-              })
-            }
+          if (Object.keys(arrObj1).indexOf(bannerPoint.bannerGroup.toLowerCase()) < 0 && bannerPoint.bannerGroup != "") {
+            arrObj1.set(bannerPoint.bannerGroup.toLowerCase(), []);
+          }
+          if (bannerPoint.bannerGroup != "") {
+            let fl_list = this.settingList.bannerPoint.filter((fl) => fl.bannerGroup.toLowerCase() === bannerPoint.bannerGroup.toLowerCase());
+            arrObj1.set(bannerPoint.bannerGroup.toLowerCase(), fl_list);
           }
           else {
-            this.segArrSaved.push({
-              name: bannerPoint.bannerGroup.toLowerCase(), value: [bannerPoint]
-            })
+            this.saved_banner_list.push(bannerPoint);
           }
         });
         this.loaderService.show();
-
         let bannerJsn = {
           "studyID": this.masterData['urlStudyId'],
           "bannerID": this.masterData["bannerInfo"]["bannerID"]
@@ -187,84 +165,6 @@ export class EditTableListComponent implements OnInit {
         });
       }
 
-      // if (this.settingList.bannerPoint.length > 0) {
-      //   this.segArrSaved = [];
-      //   this.settingList.bannerPoint.forEach(bannerPoint => {
-      //     if (this.segArrSaved.length) {
-      //       if (this.segArrSaved[this.segArrSaved.length - 1].name == bannerPoint.bannerGroup.toLowerCase()) {
-      //         this.segArrSaved[this.segArrSaved.length - 1].value.push(bannerPoint)
-      //       }
-      //       else {
-      //         this.segArrSaved.push({
-      //           name: bannerPoint.bannerGroup.toLowerCase(), value: [bannerPoint]
-      //         })
-      //       }
-      //     }
-      //     else {
-      //       this.segArrSaved.push({
-      //         name: bannerPoint.bannerGroup.toLowerCase(), value: [bannerPoint]
-      //       })
-      //     }
-      //   });
-        // {
-        //   name: bannerPoint.bannerGroup.toLowerCase(), value: bannerPoint
-        // }
-        // console.log(this.segArrSaved)
-        // let arrObj1 = {};
-        // let arrObj2 = {};
-        // this.settingList.bannerPoint.forEach(bannerPoint => {
-        //   if (Object.keys(arrObj1).indexOf(bannerPoint.bannerGroup.toLowerCase()) < 0 && bannerPoint.bannerGroup != "") {
-        //     arrObj1[bannerPoint.bannerGroup.toLowerCase()] = [];
-        //   }
-        //   if (bannerPoint.bannerGroup != "") {
-        //     arrObj1[bannerPoint.bannerGroup.toLowerCase()].push(bannerPoint);
-        //   }
-        // });
-        // this.segArrSaved.push(arrObj1);
-        // this.settingList.bannerPoint.forEach(bannerPoint => {
-        //   if (Object.keys(arrObj2).indexOf(bannerPoint.bannerGroup.toLowerCase()) < 0 && bannerPoint.bannerGroup == "") {
-        //     arrObj2[bannerPoint.bannerGroup.toLowerCase()] = [];
-        //   }
-        //   if (bannerPoint.bannerGroup == "") {
-        //     arrObj2[bannerPoint.bannerGroup.toLowerCase()].push(bannerPoint);
-        //   }
-        // });
-        // this.segArrSaved.push(arrObj2);
-      //   this.loaderService.show();
-      //   let bannerJsn = {
-      //         "studyID": this.masterData['urlStudyId'],
-      //         "bannerID": this.masterData["bannerInfo"]["bannerID"]
-      //       }
-      //       this.httpService.callApi('bannerTableList', { body: bannerJsn }).subscribe((response) => {
-      //         let viewResp = response["header"]["code"];
-      //         if (viewResp == 200) {
-      //           this.tableLocalData = this.systemSr.getBannerData();
-      //           if (this.tableLocalData != undefined) {
-      //             if (this.tableLocalData["tableLoaded"] != undefined) {
-      //               this.tableList = this.tableLocalData["tableLoaded"];
-      //             }
-      //             else {
-      //               this.tableList = response["response"];
-      //             }
-      //           }
-      //           else {
-      //             this.tableList = response["response"];
-      //           }
-      //           this.tableList.forEach(obj => {
-      //             obj.description = obj.description.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-      //           });
-
-           
-      //           this.httpService.callApi('allTableQuesList', { body: bannerJsn }).subscribe((response) => {
-      //             let viewResp = response["header"]["code"];
-                        
-                  
-                 
-      //           });
-              
-      //     }
-      //   });
-      // }
       else {
         this.navigateUrl("edit-banner");
       }
@@ -273,6 +173,7 @@ export class EditTableListComponent implements OnInit {
       this.systemSr.internalNavigate();
     }
   }
+
 
   async getTableLogicData() {
     let headers = this.systemSr.getMasterToken();
@@ -286,8 +187,6 @@ export class EditTableListComponent implements OnInit {
     console.log(this.tableList)
     this.tableList.forEach(async (list) => {
       let urlOne = this.systemSr.urlsService.url + '/crosstabShare/tableList/output/' + this.masterData["bannerInfo"]["bannerID"] + "/" + list.tableID;
-      // console.log(urlOne)
-      // console.log(headers)
       const promise = this.http.post(urlOne, { "switchKey": this.masterData['token'], "studyID": this.masterData['urlStudyId'] }).toPromise()
       promise.then(async (resp) => {
         let dRsp = await resp["header"]["code"];
@@ -295,8 +194,6 @@ export class EditTableListComponent implements OnInit {
         if (dRsp == 200) {
           if (list.tableID == resp["response"]["tableID"]) {
             list["row_data"] = resp["response"];
-
-            // console.log("row_data", list["row_data"]);
             list["row_data"]._row_order.forEach(ro => {
               list["row_data"]._rows[ro] = list["row_data"]._rows[ro].replaceAll("&lt;", "<").replaceAll("&gt;", ">");
             });
@@ -536,8 +433,6 @@ export class EditTableListComponent implements OnInit {
             }
           }
           else {
-            // error +=1;
-            // errorMsg = "Banner logic is required";
           }
         });
       });
@@ -709,14 +604,7 @@ export class EditTableListComponent implements OnInit {
                 this.closeSetModal('settingsModal');
                 this.editModal = false;
                 this.settingsModal = false;
-                // let secArr = [];
-                // this.savedQuesList.forEach(cols => {
-                //   secArr.push(cols.qID);
-                // });
-
-                // let array3 = quesID.filter(function(obj) { return secArr.indexOf(obj) == -1; });
                 this.updatedListAfterSetting(quesID);
-                // this.ngOnInit();
               }
             });
           }
@@ -1093,8 +981,6 @@ export class EditTableListComponent implements OnInit {
             }
           }
           else {
-            // error +=1;
-            // errorMessage = "Table logic is required";
           }
         });
       });
@@ -2025,8 +1911,6 @@ export class EditTableListComponent implements OnInit {
                 }
               }
               else {
-                // error +=1;
-                // errorMessage = "Table logic is required";
               }
             });
           });
@@ -2237,8 +2121,6 @@ export class EditTableListComponent implements OnInit {
             }
           }
           else {
-            // error +=1;
-            // errorMessage = "Table logic is required";
           }
         });
       });
@@ -2369,7 +2251,6 @@ export class EditTableListComponent implements OnInit {
         "bannerID": this.masterData['bannerInfo']['bannerID'],
         "description": q_table_text,
         "title": tableLabel,
-        // "new_qID": "CT-77",
         "qType": "single-select",
         "rowOptionList": roOptions,
         "logic": logicalArray
@@ -2424,15 +2305,6 @@ export class EditTableListComponent implements OnInit {
       this.el.nativeElement.querySelector("#invalue" + j + i + a).value = '';
     }
   }
-
-  // sanitizeText(text) {
-  //   // console.log("text", text);
-  //   let textSanitized = this.sanitizer.bypassSecurityTrustHtml(
-  //     DOMPurify.sanitize(text)
-  //   );
-
-  //   return textSanitized;
-  // }
 
   sanitizeText(text) {
     let textSanitized: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(text);

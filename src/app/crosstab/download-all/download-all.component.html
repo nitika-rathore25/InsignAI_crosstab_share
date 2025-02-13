@@ -9,7 +9,6 @@
             <h4 class="modal-title ellip">Downloads : {{masterData?.stdName}}</h4>
           </div>
           <div class="col-lg-2">
-            <!-- <button type="button" class="close" (click)="dismissConfirm()">&times;</button> -->
           </div>
         </div>
 
@@ -34,19 +33,17 @@
           </div>
 
           <div class="col-lg-12 text-center" *ngIf="downloadStatusList?.data.length == 0">
-            <p class="mt-1 mb-3">No download history found.</p>
+            <p class="mt-1 mb-3">No all exports found.</p>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-lg-6 text-left">
-            <button class="btn clear_btn" *ngIf="downloadStatusList?.data.length > 0" id="cl_history"
+          <div class="col-lg-12 text-center">
+            <button class="btn clear_btn me-1" *ngIf="downloadStatusList?.data.length > 0" id="cl_history"
               (click)="clearHistory()">Clear History</button>
             <button class="btn clear_btn d-none" id="cl_confirm_history" (click)="clearDownloadHistory()">Confirm Clear
               History</button>
-          </div>
-          <div class="col-lg-6 text-right">
-            <button class="btn cl_btn" (click)="dismissStatusModal()">Close</button>
+            <button class="btn cl_btn ms-1" (click)="dismissStatusModal()">Close</button>
           </div>
         </div>
       </div>

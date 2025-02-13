@@ -1,65 +1,55 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UrlsService {
   urlObject: any;
+  masterUrl: string;
+  url: string;
+  urlCrosstab: string;
+  urlOutput: string;
+  userApi: string;
+  sampleUrl: string;
+  fileUrl: string;
 
   // **************************Development Url************************************
   // *****************************************************************************
 
-  // masterUrl = 'https://querynest.com/insignai';
-  // url = 'https://querynest.com/insignai';
-  // urlCrosstab = 'https://querynest.com/insignai/crosstab';
-  // urlOutput = 'https://querynest.com/insignai/output';
-  // userApi = 'https://querynest.com/insignai';
-  // sampleUrl = 'https://querynest.com/insignai';
-  // fileUrl = 'https://querynest.com/insignai';
-
-  // masterUrl = 'https://querynest.com/services-demo3/';
-  // url = 'https://querynest.com/services-demo3/';
-  // urlCrosstab = 'https://querynest.com/services-demo3/crosstab';
-  // urlOutput = 'https://querynest.com/services-demo3/output';
-  // userApi = 'https://querynest.com/services-demo3';
-  sampleUrl = 'https://querynest.com/insignai-services-v1';
-  fileUrl = 'https://querynest.com/insignai-services-v1';
-
-
-  // masterUrl = "https://querynest.com";
-  // url = "https://querynest.com/insignai-services-v1";
-  // urlCrosstab = "https://querynest.com/insignai-services-v1/crosstabShare";
-  // urlOutput = "https://querynest.com/insignai-services-v1/outputShare";
-  // userApi = "https://querynest.com/insignai-services-v1/crosstabShare";
-
-  // dev urls
-  masterUrl = "https://dev.viewcurry.com/insign_ai_dev";
-  url = "https://dev.viewcurry.com/insign_ai_dev";
-  urlCrosstab = "https://dev.viewcurry.com/insign_ai_dev/crosstabShare";
-  urlOutput = "https://dev.viewcurry.com/insign_ai_dev/outputShare";
-  userApi = "https://dev.viewcurry.com/insign_ai_dev/crosstabShare";
-
-  // *********************************END*****************************************
-  // *****************************************************************************
-
-  // **************************Production Url************************************
-  // ****************************************************************************
-
-  // masterUrl = "https://8451inqueries.com";
-  // url = "https://8451inqueries.com/services";
-  // urlCrosstab = "https://8451inqueries.com/services/crosstab";
-  // urlOutput = "https://8451inqueries.com/services/output";
-  // userApi = "https://8451inqueries.com/services";
-  // sampleUrl = "https://querynest.com/e451";
-
-  // To upload file
-  // fileUrl = "https://8451consumerresearchbridge.com/_blob";
-  // fileUrl = "https://8451inqueries.com/services";
-
-  // ****************************************************************************
-  // ****************************************************************************
 
   constructor() {
+    if (environment.staging == true) {
+      this.masterUrl = environment.baseUrlStaging;
+      this.url = environment.baseUrlStaging + '/insignai-services-v1';
+      this.urlCrosstab = environment.baseUrlStaging + '/insignai-services-v1/crosstabShare';
+      this.urlOutput = environment.baseUrlStaging + '/insignai-services-v1/outputShare';
+      this.userApi = environment.baseUrlStaging + '/insignai-services-v1';
+      this.sampleUrl = environment.baseUrlStaging + '/e451-demo';
+      this.fileUrl = environment.baseUrlStaging + '/insignai-services-v1';
+    }
+
+    else if (environment.production == true) {
+      this.masterUrl = environment.baseUrlProd;
+      this.url = environment.baseUrlProd + 'insignai-services-v1';
+      this.urlCrosstab = environment.baseUrlProd + 'insignai-services-v1/crosstabShare';
+      this.urlOutput = environment.baseUrlProd + 'insignai-services-v1/outputShare';
+      this.userApi = environment.baseUrlProd + 'insignai-services-v1';
+      this.sampleUrl = environment.baseUrlProd + '/e451-demo';
+      this.fileUrl = environment.baseUrlProd + 'insignai-services-v1';
+    }
+
+    else if (environment.development == true) {
+      this.masterUrl = environment.baseUrlDev;
+      this.url = environment.baseUrlDev + '/insign_ai_dev';
+      this.urlCrosstab = environment.baseUrlDev + '/insign_ai_dev/crosstabShare';
+      this.urlOutput = environment.baseUrlDev + '/insign_ai_dev/outputShare';
+      this.userApi = environment.baseUrlDev + '/insign_ai_dev/crosstabShare';
+      this.sampleUrl = environment.baseUrlDev + '/e451-demo';
+      this.fileUrl = environment.baseUrlDev + '/insign_ai_dev';
+    }
+
+
     this.urlObject = {
       login: {
         method: 'POST',

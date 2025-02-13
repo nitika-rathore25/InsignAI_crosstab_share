@@ -14,12 +14,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DownloadAllComponent } from './download-all/download-all.component';
 import { LoaderService } from '../service/loader.service';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { CrosstabPipe } from '../pipe/crosstab.pipe';
 
 @NgModule({
   declarations: [
     CrosstabComponent,
     EditBannerComponent,
     FilterPipe,
+    CrosstabPipe,
     EditTableListComponent,
     HeaderComponent,
     DownloadAllComponent
@@ -37,6 +39,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CrosstabComponent,
     EditBannerComponent,
     FilterPipe,
+    CrosstabPipe,
     EditTableListComponent,
   ],
   providers: [ToastrService, SystemService],
