@@ -24,7 +24,7 @@
     "@syncfusion/ej2-angular-dropdowns": "^21.2.0",
     "angular-datatables": "^14.0.0",
     "angular-material-expansion-panel": "^0.6.2",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "^5.2.3",
     "crypto-js": "^4.1.1",
     "datatables.net": "^1.13.1",
     "datatables.net-bs4": "^1.13.1",
