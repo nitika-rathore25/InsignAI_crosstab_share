@@ -31,12 +31,12 @@ export class UrlsService {
 
     else if (environment.production == true) {
       this.masterUrl = environment.baseUrlProd;
-      this.url = environment.baseUrlProd + 'insignai-services-v1';
-      this.urlCrosstab = environment.baseUrlProd + 'insignai-services-v1/crosstabShare';
-      this.urlOutput = environment.baseUrlProd + 'insignai-services-v1/outputShare';
-      this.userApi = environment.baseUrlProd + 'insignai-services-v1';
+      this.url = environment.baseUrlProd + '/services';
+      this.urlCrosstab = environment.baseUrlProd + '/services/crosstabShare';
+      this.urlOutput = environment.baseUrlProd + '/services/outputShare';
+      this.userApi = environment.baseUrlProd + '/services';
       this.sampleUrl = environment.baseUrlProd + '/e451-demo';
-      this.fileUrl = environment.baseUrlProd + 'insignai-services-v1';
+      this.fileUrl = environment.baseUrlProd + '/services';
     }
 
     else if (environment.development == true) {
