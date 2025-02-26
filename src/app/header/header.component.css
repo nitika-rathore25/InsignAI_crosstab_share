@@ -172,3 +172,6 @@
   color: white!important;
 }
 
+.study_name_width{
+    min-width: 125px;
+}
