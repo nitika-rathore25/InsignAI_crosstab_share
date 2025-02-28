@@ -57,9 +57,9 @@ export class DownloadAllComponent implements OnInit {
         this.downloadStatusList = response["response"];
         this.loaderService.hide();
         if (response["response"]["incomplete"] > 0 && this.systemSr.downloadHistory == true) {
-          // setTimeout(() => {
-          //   this.recallProcessList()
-          // }, 4000);
+          setTimeout(() => {
+            this.recallProcessList()
+          }, 4000);
         }
       }
     });
