@@ -1091,13 +1091,13 @@ export class CrosstabComponent implements OnInit {
         this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
         if (pid) {
           this.el.nativeElement.querySelector("#down_" + list.bannerID).classList.remove("d_op");
-          this.downloadProcess(pid, '.xlsx');
+          this.downloadProcess(pid, '.xlsx', list);
         }
       }
     });
   }
 
-  downloadProcess(pid, fl_type) {
+  downloadProcess(pid, fl_type, list) {
     let pptJson = {
       "studyID": this.studyId,
       "pid": pid
@@ -1108,14 +1108,24 @@ export class CrosstabComponent implements OnInit {
           let filename = this.masterData['stdName'] + "_" + Date.now() + fl_type;
           let fileType = response.type;
           let rspData = [];
+          let toastMessage;
+          let fileExtension = filename.split('.').pop()?.toUpperCase() || 'File';
+          let fileMessage = `${fileExtension}`;
           rspData.push(response);
+          const now = new Date();
+          const gmtDate = new Date(now.toUTCString());
+          const formattedDate = `${gmtDate.getUTCDate().toString().padStart(2, '0')}_${gmtDate.toLocaleString('en-GB', { month: 'short', timeZone: 'GMT' })}_${gmtDate.getUTCFullYear()}`;
+          if (fileMessage == 'XLSX') {
+            toastMessage = `Crosstab Report for ${list.title} downloaded Successfully`;
+            filename = `${this.masterData['stdName']}_Cross Tab Report across ${list.title} _${formattedDate}`;
+          }
           let downloadLink = document.createElement('a');
           downloadLink.href = window.URL.createObjectURL(new Blob(rspData, { type: fileType }));
           if (filename) {
             downloadLink.setAttribute('download', filename);
             document.body.appendChild(downloadLink);
             downloadLink.click();
-            this.toastr.success(this.masterData.stdName + " downloaded successfully", '');
+            this.toastr.success(toastMessage, '');
           }
         }
       }
