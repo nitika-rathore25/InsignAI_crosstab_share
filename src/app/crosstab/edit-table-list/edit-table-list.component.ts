@@ -75,7 +75,6 @@ export class EditTableListComponent implements OnInit {
 
   ngOnInit() {
     this.masterData = this.systemSr.getLocalStorage();
-    console.log(this.masterData)
     if (this.masterData["bannerInfo"]["bannerID"]) {
       this.settingList = this.masterData["bannerInfo"];
 
@@ -145,10 +144,6 @@ export class EditTableListComponent implements OnInit {
                       });
 
                       this.loaderService.hide();
-                      console.log(this.tableList)
-                      console.log(this.tableLocalData)
-                      console.log(this.tableData)
-                      console.log(this.settingList)
 
                       if (this.tableLocalData == undefined) {
                         this.getTableLogicData();
@@ -184,13 +179,11 @@ export class EditTableListComponent implements OnInit {
     }
     this.apiCounter = 0;
     this.progress = 0;
-    console.log(this.tableList)
     this.tableList.forEach(async (list) => {
       let urlOne = this.systemSr.urlsService.url + '/crosstabShare/tableList/output/' + this.masterData["bannerInfo"]["bannerID"] + "/" + list.tableID;
       const promise = this.http.post(urlOne, { "switchKey": this.masterData['token'], "studyID": this.masterData['urlStudyId'] }).toPromise()
       promise.then(async (resp) => {
         let dRsp = await resp["header"]["code"];
-        console.log(await resp)
         if (dRsp == 200) {
           if (list.tableID == resp["response"]["tableID"]) {
             list["row_data"] = resp["response"];
@@ -1320,7 +1313,6 @@ export class EditTableListComponent implements OnInit {
             this.masterData["bannerInfo"] = banner;
             this.masterData["bannerInfo"]["bannerPoint"] = response["response"];
             this.systemSr.setLocalStorage(this.masterData);
-            console.log(this.masterData)
             if (this.masterData["bannerInfo"]["bannerPoint"].length == 0) {
               this.navigateUrl("edit-banner");
             }

@@ -66,9 +66,7 @@ export class CrosstabComponent implements OnInit {
     this.addPass = true;
     this.display = 'flex'
     this.studyId = this.activatedRoute.snapshot.queryParamMap["params"]['switch'];
-    console.log(this.studyId)
     this.masterData = this.systemSr.getLocalStorage();
-    console.log(this.studyId)
     if (!this.studyId && this.masterData) {
       if (this.masterData['urlStudyId']) {
         this.studyId = this.masterData['urlStudyId']
@@ -76,14 +74,12 @@ export class CrosstabComponent implements OnInit {
     }
     if (this.masterData) {
       if (this.masterData.token) {
-        console.log(this.masterData)
         this.addPass = false;
         this.bannerDisplay = 'none';
         this.passwordCheck(this.masterData.token);
 
       }
     }
-    console.log(this.studyId)
     if (this.masterData == undefined) {
       this.masterData = {};
     }
@@ -115,13 +111,9 @@ export class CrosstabComponent implements OnInit {
 
         };
         this.bannerDisplay = 'none';
-        console.log(this.masterData)
         this.systemSr.clearCrosstabTable();
-        // delete this.masterData["bannerInfo"];
-        // delete this.masterData["seg_group_names"];
         this.masterData["studyState"] = this.viewAllData["studyState"];
         this.systemSr.setLocalStorage(this.masterData);
-        console.log(this.masterData)
         this.addLogicToBanner();
         this.tableApis();
       }

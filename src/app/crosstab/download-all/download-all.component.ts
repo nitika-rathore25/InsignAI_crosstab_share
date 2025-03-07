@@ -32,7 +32,6 @@ export class DownloadAllComponent implements OnInit {
     }
     this.httpService.callApi('downloadProcessList', { body: resetJson }).subscribe((response) => {
       let viewResp = response["header"]["code"];
-      console.log('test')
       if (viewResp == 200) {
         this.downloadStatusList = response["response"];
         this.display = "block";
@@ -51,7 +50,6 @@ export class DownloadAllComponent implements OnInit {
       "studyID": this.masterData['urlStudyId']
     }
     this.httpService.callApi('downloadProcessList', { body: resetJson }).subscribe((response) => {
-      console.log('test2')
       let viewResp = response["header"]["code"];
       if (viewResp == 200) {
         this.downloadStatusList = response["response"];
@@ -82,7 +80,6 @@ export class DownloadAllComponent implements OnInit {
           const gmtDate = new Date(now.toUTCString());
           const formattedDate = `${gmtDate.getUTCDate().toString().padStart(2, '0')}_${gmtDate.toLocaleString('en-GB', { month: 'short', timeZone: 'GMT' })}_${gmtDate.getUTCFullYear()}`;
             if (list.crosstab == 1) {
-            console.log(list?.file_type == 'xlsx', !list.qID)
             if (list?.file_type == 'xlsx' && list.qID) {
               toastMessage = `Crosstab Report for ${list.banner_name} : ${list.qLabel} downloaded Successfully`;
               filename = `${this.masterData['stdName']}_${list.qID}_Cross Tab Report across ${list.banner_name} _${formattedDate}`;
