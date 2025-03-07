@@ -66,9 +66,7 @@ export class CrosstabComponent implements OnInit {
     this.addPass = true;
     this.display = 'flex'
     this.studyId = this.activatedRoute.snapshot.queryParamMap["params"]['switch'];
-    console.log(this.studyId)
     this.masterData = this.systemSr.getLocalStorage();
-    console.log(this.studyId)
     if (!this.studyId && this.masterData) {
       if (this.masterData['urlStudyId']) {
         this.studyId = this.masterData['urlStudyId']
@@ -76,14 +74,12 @@ export class CrosstabComponent implements OnInit {
     }
     if (this.masterData) {
       if (this.masterData.token) {
-        console.log(this.masterData)
         this.addPass = false;
         this.bannerDisplay = 'none';
         this.passwordCheck(this.masterData.token);
 
       }
     }
-    console.log(this.studyId)
     if (this.masterData == undefined) {
       this.masterData = {};
     }
@@ -115,13 +111,9 @@ export class CrosstabComponent implements OnInit {
 
         };
         this.bannerDisplay = 'none';
-        console.log(this.masterData)
         this.systemSr.clearCrosstabTable();
-        // delete this.masterData["bannerInfo"];
-        // delete this.masterData["seg_group_names"];
         this.masterData["studyState"] = this.viewAllData["studyState"];
         this.systemSr.setLocalStorage(this.masterData);
-        console.log(this.masterData)
         this.addLogicToBanner();
         this.tableApis();
       }
@@ -1091,13 +1083,13 @@ export class CrosstabComponent implements OnInit {
         this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
         if (pid) {
           this.el.nativeElement.querySelector("#down_" + list.bannerID).classList.remove("d_op");
-          this.downloadProcess(pid, '.xlsx');
+          this.downloadProcess(pid, '.xlsx', list);
         }
       }
     });
   }
 
-  downloadProcess(pid, fl_type) {
+  downloadProcess(pid, fl_type, list) {
     let pptJson = {
       "studyID": this.studyId,
       "pid": pid
@@ -1108,14 +1100,24 @@ export class CrosstabComponent implements OnInit {
           let filename = this.masterData['stdName'] + "_" + Date.now() + fl_type;
           let fileType = response.type;
           let rspData = [];
+          let toastMessage;
+          let fileExtension = filename.split('.').pop()?.toUpperCase() || 'File';
+          let fileMessage = `${fileExtension}`;
           rspData.push(response);
+          const now = new Date();
+          const gmtDate = new Date(now.toUTCString());
+          const formattedDate = `${gmtDate.getUTCDate().toString().padStart(2, '0')}_${gmtDate.toLocaleString('en-GB', { month: 'short', timeZone: 'GMT' })}_${gmtDate.getUTCFullYear()}`;
+          if (fileMessage == 'XLSX') {
+            toastMessage = `Crosstab Report for ${list.title} downloaded Successfully`;
+            filename = `${this.masterData['stdName']}_Cross Tab Report across ${list.title} _${formattedDate}`;
+          }
           let downloadLink = document.createElement('a');
           downloadLink.href = window.URL.createObjectURL(new Blob(rspData, { type: fileType }));
           if (filename) {
             downloadLink.setAttribute('download', filename);
             document.body.appendChild(downloadLink);
             downloadLink.click();
-            this.toastr.success(this.masterData.stdName + " downloaded successfully", '');
+            this.toastr.success(toastMessage, '');
           }
         }
       }

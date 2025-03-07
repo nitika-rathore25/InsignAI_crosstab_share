@@ -75,7 +75,6 @@ export class EditTableListComponent implements OnInit {
 
   ngOnInit() {
     this.masterData = this.systemSr.getLocalStorage();
-    console.log(this.masterData)
     if (this.masterData["bannerInfo"]["bannerID"]) {
       this.settingList = this.masterData["bannerInfo"];
 
@@ -145,10 +144,6 @@ export class EditTableListComponent implements OnInit {
                       });
 
                       this.loaderService.hide();
-                      console.log(this.tableList)
-                      console.log(this.tableLocalData)
-                      console.log(this.tableData)
-                      console.log(this.settingList)
 
                       if (this.tableLocalData == undefined) {
                         this.getTableLogicData();
@@ -184,13 +179,11 @@ export class EditTableListComponent implements OnInit {
     }
     this.apiCounter = 0;
     this.progress = 0;
-    console.log(this.tableList)
     this.tableList.forEach(async (list) => {
       let urlOne = this.systemSr.urlsService.url + '/crosstabShare/tableList/output/' + this.masterData["bannerInfo"]["bannerID"] + "/" + list.tableID;
       const promise = this.http.post(urlOne, { "switchKey": this.masterData['token'], "studyID": this.masterData['urlStudyId'] }).toPromise()
       promise.then(async (resp) => {
         let dRsp = await resp["header"]["code"];
-        console.log(await resp)
         if (dRsp == 200) {
           if (list.tableID == resp["response"]["tableID"]) {
             list["row_data"] = resp["response"];
@@ -1320,7 +1313,6 @@ export class EditTableListComponent implements OnInit {
             this.masterData["bannerInfo"] = banner;
             this.masterData["bannerInfo"]["bannerPoint"] = response["response"];
             this.systemSr.setLocalStorage(this.masterData);
-            console.log(this.masterData)
             if (this.masterData["bannerInfo"]["bannerPoint"].length == 0) {
               this.navigateUrl("edit-banner");
             }
@@ -1467,7 +1459,7 @@ export class EditTableListComponent implements OnInit {
     }
   }
 
-  downloadExcel() {
+  downloadExcel(number) {
     this.loaderService.show();
     this.el.nativeElement.querySelector("#cross_down").classList.add("d_op");
     let tableArr = [];
@@ -1487,7 +1479,7 @@ export class EditTableListComponent implements OnInit {
         this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
         if (pid) {
           this.el.nativeElement.querySelector("#cross_down").classList.remove("d_op");
-          this.downloadProcess(pid, '.xlsx');
+          this.downloadProcess(pid, '.xlsx', '', number);
         }
       }
     });
@@ -1505,7 +1497,7 @@ export class EditTableListComponent implements OnInit {
     this.systemSr.downloadHistory = true;
   }
 
-  downloadCrosstab(list) {
+  downloadCrosstab(list, number) {
     this.loaderService.show();
     this.el.nativeElement.querySelector(".add_" + list.qID).classList.add("d_op");
     let tableID = []
@@ -1523,13 +1515,13 @@ export class EditTableListComponent implements OnInit {
         this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
         if (pid) {
           this.el.nativeElement.querySelector(".add_" + list.qID).classList.remove("d_op");
-          this.downloadProcess(pid, '.xlsx');
+          this.downloadProcess(pid, '.xlsx', list, number);
         }
       }
     });
   }
 
-  downloadProcess(pid, fl_type) {
+  downloadProcess(pid, fl_type, list, number) {
     let pptJson = {
       "studyID": this.masterData['urlStudyId'],
       "pid": pid
@@ -1540,14 +1532,29 @@ export class EditTableListComponent implements OnInit {
           let filename = this.masterData['stdName'] + "_" + Date.now() + fl_type;
           let fileType = response.type;
           let rspData = [];
+          let toastMessage;
+          let fileExtension = filename.split('.').pop()?.toUpperCase() || 'File';
+          let fileMessage = `${fileExtension}`;
           rspData.push(response);
+          const now = new Date();
+          const gmtDate = new Date(now.toUTCString());
+          const formattedDate = `${gmtDate.getUTCDate().toString().padStart(2, '0')}_${gmtDate.toLocaleString('en-GB', { month: 'short', timeZone: 'GMT' })}_${gmtDate.getUTCFullYear()}`;
+          if (fileMessage == 'XLSX' && number === 'single') {
+            toastMessage = `Crosstab Report for ${this.masterData['bannerInfo']['title']} : ${list?.qLabel} downloaded Successfully`;
+            filename = `${this.masterData['stdName']}_${list.qID}_Cross Tab Report across ${this.masterData['bannerInfo']['title']} _${formattedDate}`;
+          }
+          else if (fileMessage == 'XLSX' && number === 'overall') {
+            toastMessage = `Crosstab Report for ${this.masterData['bannerInfo']['title']} downloaded Successfully`;
+            filename = `${this.masterData['stdName']}_Cross Tab Report across ${this.masterData['bannerInfo']['title']} _${formattedDate}`;
+          }
+
           let downloadLink = document.createElement('a');
           downloadLink.href = window.URL.createObjectURL(new Blob(rspData, { type: fileType }));
           if (filename) {
             downloadLink.setAttribute('download', filename);
             document.body.appendChild(downloadLink);
             downloadLink.click();
-            this.toastr.success(this.masterData.stdName + " downloaded successfully", '');
+            this.toastr.success(toastMessage, '');
           }
         }
       }
