@@ -1540,7 +1540,7 @@ export class EditTableListComponent implements OnInit {
           const gmtDate = new Date(now.toUTCString());
           const formattedDate = `${gmtDate.getUTCDate().toString().padStart(2, '0')}_${gmtDate.toLocaleString('en-GB', { month: 'short', timeZone: 'GMT' })}_${gmtDate.getUTCFullYear()}`;
           if (fileMessage == 'XLSX' && number === 'single') {
-            toastMessage = `Crosstab Report for ${this.masterData['bannerInfo']['title']} : ${list?.qLabel} downloaded Successfully`;
+            toastMessage = `Crosstab Report for ${this.masterData['bannerInfo']['title']} : ${list?.qLabel || list?.title?.split('---').pop()?.trim()} downloaded Successfully`;
             filename = `${this.masterData['stdName']}_${list.qID}_Cross Tab Report across ${this.masterData['bannerInfo']['title']} _${formattedDate}`;
           }
           else if (fileMessage == 'XLSX' && number === 'overall') {
