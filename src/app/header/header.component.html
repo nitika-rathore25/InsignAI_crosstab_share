@@ -14,15 +14,6 @@
       <div class="ms-auto"></div>
       <div class="mx-auto">
         <ul class="navbar-nav me-auto order-0">
-          <!-- <li class="nav-item" (click)="navigateUrl('dashboard')" *ngIf="url != 'study-listing'">
-            <a class="nav-link altColor2C"><i class="fa fa-home mr-1 altColor2C"></i> Home</a>
-          </li>
-          <li class="nav-item" (click)="navigateUrl('input/template')" *ngIf="url != 'study-listing'">
-            <a class="nav-link altColor2C"
-              [ngClass]="{ 'nav_active': url == 'input/template' && 'altColor2_border_bottom' && 'altColor1_bg'}"><i
-                class="fa fa-list mr-1 altColor2C"></i>
-              Template</a>
-          </li> -->
           <li class="nav-item" (click)="navigateUrl('input/survey')"
             *ngIf="((masterData?.created_q >= 5 || questionInfo?.created_q >= 5) && (masterData?.isOwner == 1 || masterData?.isPublish == 1 || masterData?.isInput == 1) && masterData?.studyId && masterData?.hasQuestionnaire == 1 && url != 'home' && (((builderInfo != 7 || masterData.sample_feasible != 7) && masterData?.natrep == 0) || masterData?.natrep == 1)) || (masterData?.created_q >= 5 || masterData?.output == 1)">
             <a class="nav-link altColor2C"
@@ -67,31 +58,6 @@
         <a class="altColor2C user-names mr-0 cursor-pointer" data-toggle="dropdown">
           <i class="fa fa-user altColor2C" style="font-weight:bold;"></i> &nbsp;Anonymous
         </a>
-        <!--
-        <div class="dropdown">
-          <div class="dropdown-menu drop_pos">
-            <li>
-              <a class="dropdown-item cursor-pointer mt-1" (click)="getRestModal()">
-                <i class="fa fa-user"></i><span>Change Password</span>
-              </a>
-            </li>
-            <li *ngIf="url != 'admin' && masterData?.grp != 'user' && masterData?.grp != 'ke'">
-              <a class="dropdown-item cursor-pointer" (click)="navigateUrl('admin')">
-                <i class="fa-duotone fa-cog"></i><span>User Management</span>
-              </a>
-            </li>
-            <li *ngIf="url != 'admin' && masterData?.grp == 'user'">
-              <a class="dropdown-item cursor-pointer" (click)="navigateUrl('team-view')">
-                <i class="fa-duotone fa-users"></i><span>Team List</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item cursor-pointer" (click)="openLogoutModal()">
-                <i class="fa-duotone fa-power-off" style="font-weight:bold;"></i><span>Logout</span>
-              </a>
-            </li>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -116,9 +82,10 @@
       <div class="mx-auto">
         <div class="d-flex mx-auto w-100">
           <div class="d-block text-center mx-auto">
-            <h4 class="text-dark ellip pt-2 color_white" style="min-width: 125px;">
+            <h4 class="text-dark ellip pt-2 color_white m-0 study_name_width">
               {{masterData?.stdName}}
             </h4>
+             <span class="text-center text-white font-size-label d-block">Cross tabulation & Custom Tables</span>
           </div>
         </div>
       </div>

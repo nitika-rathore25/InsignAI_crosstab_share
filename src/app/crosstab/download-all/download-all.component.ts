@@ -32,7 +32,6 @@ export class DownloadAllComponent implements OnInit {
     }
     this.httpService.callApi('downloadProcessList', { body: resetJson }).subscribe((response) => {
       let viewResp = response["header"]["code"];
-      console.log('test')
       if (viewResp == 200) {
         this.downloadStatusList = response["response"];
         this.display = "block";
@@ -51,15 +50,14 @@ export class DownloadAllComponent implements OnInit {
       "studyID": this.masterData['urlStudyId']
     }
     this.httpService.callApi('downloadProcessList', { body: resetJson }).subscribe((response) => {
-      console.log('test2')
       let viewResp = response["header"]["code"];
       if (viewResp == 200) {
         this.downloadStatusList = response["response"];
         this.loaderService.hide();
         if (response["response"]["incomplete"] > 0 && this.systemSr.downloadHistory == true) {
-          // setTimeout(() => {
-          //   this.recallProcessList()
-          // }, 4000);
+          setTimeout(() => {
+            this.recallProcessList()
+          }, 4000);
         }
       }
     });
@@ -75,8 +73,24 @@ export class DownloadAllComponent implements OnInit {
     this.httpService.callApi('downloadProcess', { body: pptJson, responseType: 'blob' as 'json' }).subscribe((response) => {
       if (response != null) {
         if (response.size > 0) {
-          let filename = this.masterData['stdName'] + "_" + Date.now() + '.' + list.file_type;
+          let filename;
           this.el.nativeElement.querySelector("#pid_" + list.pid).classList.remove("d_op");
+          let toastMessage;
+          const now = new Date();
+          const gmtDate = new Date(now.toUTCString());
+          const formattedDate = `${gmtDate.getUTCDate().toString().padStart(2, '0')}_${gmtDate.toLocaleString('en-GB', { month: 'short', timeZone: 'GMT' })}_${gmtDate.getUTCFullYear()}`;
+            if (list.crosstab == 1) {
+            if (list?.file_type == 'xlsx' && list.qID) {
+              toastMessage = `Crosstab Report for ${list.banner_name} : ${list.qLabel} downloaded Successfully`;
+              filename = `${this.masterData['stdName']}_${list.qID}_Cross Tab Report across ${list.banner_name} _${formattedDate}`;
+            }
+            else if (list?.file_type == 'xlsx' && !list.qID) {
+              toastMessage = `Crosstab Report for ${list.banner_name} downloaded Successfully`;
+              filename = `${this.masterData['stdName']}_Cross Tab Report across ${list.banner_name} _${formattedDate}`;
+            }
+          }
+
+
           let fileType = response.type;
           let rspData = [];
           rspData.push(response);
@@ -86,8 +100,9 @@ export class DownloadAllComponent implements OnInit {
             downloadLink.setAttribute('download', filename);
             document.body.appendChild(downloadLink);
             downloadLink.click();
+            this.toastr.success(toastMessage, '');
           }
-          this.toastr.success(this.masterData.stdName + " downloaded successfully", '');
+
         }
       }
     });

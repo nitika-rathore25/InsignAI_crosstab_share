@@ -78,7 +78,7 @@
                               <li>
                                 <a
                                   class="dropdown-item cursor-pointer mt-1"
-                                  (click)="downloadExcel()"
+                                  (click)="downloadExcel('overall')"
                                 >
                                   <i class="fa fa-file-excel-o"></i
                                   ><span>Download All</span>
@@ -276,7 +276,7 @@
                                         ques.qID
                                       }}"
                                       title="Click to download: {{ ques.qID }}"
-                                      (click)="downloadCrosstab(ques)"
+                                      (click)="downloadCrosstab(ques, 'single')"
                                     ></i>
                                   </span>
                                 </div>
@@ -511,10 +511,7 @@
                                     <ng-container *ngIf="ques['row_data']['data']">
                                       <div
                                         *ngIf="
-                                          ques['row_data']?.['data']?.[qt]?.[
-                                            cols.pointID
-                                          ]
-                                        "
+                                          ques['row_data']?.['data']?.[qt]?.[cols.pointID] ||  ques['row_data']?.['data']?.[qt]?.[cols.pointID] == 0"
                                       >
                                         <ng-container
                                           *ngIf="masterData?.platform == 'rti'"
