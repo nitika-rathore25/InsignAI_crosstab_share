@@ -259,10 +259,10 @@
                                 </div>
                                 <div class="col-2">
                                   <span class="pull-end" *ngIf="ques?.row_data">
-                                    <i class="fa fa-refresh edit_icon mr_4 cursor-pointer add_{{
+                                    <i class="fa fa-refresh edit_icon mr_3  cursor-pointer add_{{
                                                                   ques.qID
                                                                 }}" title="Click to reload: {{ ques.qID }}" (click)="reloadTable(ques)"></i>
-                                    <i class="fa fa-download clr_yellow edit_icon mr_3 cursor-pointer add_{{
+                                    <i class="fa fa-download clr_yellow edit_icon cursor-pointer add_{{
                                                                   ques.qID
                                                                 }}" title="Click to download: {{ ques.qID }}"
                                       (click)="downloadCrosstab(ques, 'single')"></i>
