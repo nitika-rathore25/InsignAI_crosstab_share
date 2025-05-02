@@ -349,7 +349,7 @@ export class EditTableListComponent implements OnInit {
     let error = 0;
     let logicalArray = [];
 
-    this.el.nativeElement.querySelectorAll("div.banner_logical").forEach((element, k) => {
+     this.el.nativeElement.querySelectorAll("div.banner_logical").forEach((element, k) => {
       let stringOp = "";
       let logicalStringOp = {};
       element.querySelectorAll(".banner-parent-class-logic").forEach((parent, i) => {
@@ -357,8 +357,11 @@ export class EditTableListComponent implements OnInit {
           if (questionValue.value != '') {
             if (questionValue.value != "+" && element.querySelectorAll(".operator")[i].value != '' && element.querySelectorAll(".value")[i].value != '') {
               if (questionValue.value != '' && element.querySelectorAll(".operator")[i].value != "" && element.querySelectorAll(".value")[i].value != "") {
-                stringOp += questionValue.value + element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
-                stringVal += questionValue.value + element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
+                if (element.querySelectorAll(".operator")[i].value == " IN ") {
+                  stringOp += questionValue.value + element.querySelectorAll(".operator")[i].value + '(' + element.querySelectorAll(".value")[i].value + ')';
+                } else {
+                  stringOp += questionValue.value + element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
+                }
               } else {
                 error += 1;
                 if (questionValue.value == "") {
@@ -393,7 +396,12 @@ export class EditTableListComponent implements OnInit {
                 }
                 else {
                   if (element.querySelectorAll(".options")[i].value != "" && element.querySelectorAll(".operator")[i].value != "" && element.querySelectorAll(".value")[i].value != "") {
-                    stringOp += element.querySelectorAll(".options")[i].value + element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
+                    if (element.querySelectorAll(".operator")[i].value == " IN ") {
+                      stringOp += element.querySelectorAll(".options")[i].value + element.querySelectorAll(".operator")[i].value + '(' + element.querySelectorAll(".value")[i].value + ')';
+                    } else {
+                      stringOp += element.querySelectorAll(".options")[i].value + element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
+                    }
+
                   } else {
                     error += 1;
                     if (element.querySelectorAll(".options")[i].value == "") {
@@ -412,7 +420,12 @@ export class EditTableListComponent implements OnInit {
               }
               else {
                 if (element.querySelectorAll(".operator")[i].value != "" && element.querySelectorAll(".value")[i].value != "") {
-                  stringOp += element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
+                  if (element.querySelectorAll(".operator")[i].value == " IN ") {
+                    stringOp += element.querySelectorAll(".operator")[i].value + '(' + element.querySelectorAll(".value")[i].value + ')';
+                  } else {
+                    stringOp += element.querySelectorAll(".operator")[i].value + coma1 + element.querySelectorAll(".value")[i].value + coma1;
+                  }
+
                 } else {
                   error += 1;
                   if (element.querySelectorAll(".operator")[i].value == "") {
@@ -425,6 +438,8 @@ export class EditTableListComponent implements OnInit {
               }
             }
           }
+          else {
+          }
         });
       });
 
@@ -433,8 +448,11 @@ export class EditTableListComponent implements OnInit {
           if (questionValue.value != '') {
             if (questionValue.value != "+") {
               if (child.querySelectorAll(".andoroperator")[i].value != "" && child.querySelectorAll(".operator")[i].value != "" && child.querySelectorAll(".value")[i].value != "") {
-                stringOp += child.querySelectorAll(".andoroperator")[i].value + questionValue.value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
-                stringVal += child.querySelectorAll(".andoroperator")[i].value + questionValue.value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
+                if (child.querySelectorAll(".operator")[i].value == " IN ") {
+                  stringOp += child.querySelectorAll(".andoroperator")[i].value + questionValue.value + child.querySelectorAll(".operator")[i].value + '(' + child.querySelectorAll(".value")[i].value + ')';
+                } else {
+                  stringOp += child.querySelectorAll(".andoroperator")[i].value + questionValue.value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
+                };
               } else {
                 error += 1;
                 if (questionValue.value == "") {
@@ -477,7 +495,11 @@ export class EditTableListComponent implements OnInit {
                 }
                 else {
                   if (child.querySelectorAll(".andoroperator")[i].value != "" && child.querySelectorAll(".options")[i].value != "" && child.querySelectorAll(".operator")[i].value != "" && child.querySelectorAll(".value")[i].value != "") {
-                    stringOp += child.querySelectorAll(".andoroperator")[i].value + child.querySelectorAll(".options")[i].value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
+                    if (child.querySelectorAll(".operator")[i].value == " IN ") {
+                      stringOp += child.querySelectorAll(".andoroperator")[i].value + child.querySelectorAll(".options")[i].value + child.querySelectorAll(".operator")[i].value + '(' + child.querySelectorAll(".value")[i].value + ')';
+                    } else {
+                      stringOp += child.querySelectorAll(".andoroperator")[i].value + child.querySelectorAll(".options")[i].value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
+                    }
                   } else {
                     error += 1;
                     if (element.querySelectorAll(".andoroperator")[i].value == "") {
@@ -500,7 +522,11 @@ export class EditTableListComponent implements OnInit {
               }
               else {
                 if (child.querySelectorAll(".andoroperator")[i].value != "" && child.querySelectorAll(".operator")[i].value != "" && child.querySelectorAll(".value")[i].value != "") {
-                  stringOp += child.querySelectorAll(".andoroperator")[i].value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
+                  if (child.querySelectorAll(".operator")[i].value == " IN ") {
+                    stringOp += child.querySelectorAll(".andoroperator")[i].value + child.querySelectorAll(".operator")[i].value + '(' + child.querySelectorAll(".value")[i].value + ')';
+                  } else {
+                    stringOp += child.querySelectorAll(".andoroperator")[i].value + child.querySelectorAll(".operator")[i].value + coma1 + child.querySelectorAll(".value")[i].value + coma1;
+                  }
                 } else {
                   if (element.querySelectorAll(".andoroperator")[i].value == "" || element.querySelectorAll(".operator")[i].value == "") {
                     errorMsg = "Banner logic operator should not be empty";
