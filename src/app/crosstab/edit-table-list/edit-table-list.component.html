@@ -266,7 +266,7 @@
                                                                   ques.qID
                                                                 }}" title="Click to download: {{ ques.qID }}"
                                       (click)="downloadCrosstab(ques, 'single')"></i>
-                                    <i class="fa fa-pencil-square-o edit_icon cursor-pointer clr_blue" title="Click to edit: {{ ques.qID }}"
+                                    <i class="fa fa-pencil-square-o edit_icon cursor-pointer clr_blue d-none" title="Click to edit: {{ ques.qID }}"
                                       (click)="editQuestionModal(ques)" *ngIf="masterData?.grp != 'ke'"></i>
                                   </span>
                                 </div>
