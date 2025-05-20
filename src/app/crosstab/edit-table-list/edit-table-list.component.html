@@ -251,33 +251,23 @@
                       <div class="row">
                         <div class="col-lg-12">
                           <h4 class="sub_obj_st">
-                            <span [innerHTML]="ques.title" class="d-flex"
-                              >{{ ques.title }} </span
-                            ><br />
+                            <span [innerHTML]="ques.title" class="d-flex">{{ ques.title }} </span><br />
                             <span>
-                              <div class="row">
-                                <div
-                                  class="col-10 fw-normal"
-                                  [innerHTML]="ques.description"
-                                >
+                              <div class="row mt-3">
+                                <div class="col-10" [innerHTML]="ques.description" style="font-weight: normal">
                                   {{ ques.description }}
                                 </div>
                                 <div class="col-2">
                                   <span class="pull-end" *ngIf="ques?.row_data">
-                                    <i
-                                      class="fa fa-refresh edit_icon mr_4 cursor-pointer add_{{
-                                        ques.qID
-                                      }}"
-                                      title="Click to reload: {{ ques.qID }}"
-                                      (click)="reloadTable(ques)"
-                                    ></i>
-                                    <i
-                                      class="fa fa-download clr_yellow edit_icon mr_3 cursor-pointer add_{{
-                                        ques.qID
-                                      }}"
-                                      title="Click to download: {{ ques.qID }}"
-                                      (click)="downloadCrosstab(ques, 'single')"
-                                    ></i>
+                                    <i class="fa fa-refresh edit_icon mr_3  cursor-pointer add_{{
+                                                                  ques.qID
+                                                                }}" title="Click to reload: {{ ques.qID }}" (click)="reloadTable(ques)"></i>
+                                    <i class="fa fa-download clr_yellow edit_icon cursor-pointer add_{{
+                                                                  ques.qID
+                                                                }}" title="Click to download: {{ ques.qID }}"
+                                      (click)="downloadCrosstab(ques, 'single')"></i>
+                                    <i class="fa fa-pencil-square-o edit_icon cursor-pointer clr_blue d-none" title="Click to edit: {{ ques.qID }}"
+                                      (click)="editQuestionModal(ques)" *ngIf="masterData?.grp != 'ke'"></i>
                                   </span>
                                 </div>
                               </div>
@@ -294,504 +284,220 @@
 
                         <div class="col-lg-12 mt-2" *ngIf="ques?.row_data">
                           <div class="table-responsive">
-                            <table class="table table-bordered">
-                              <thead *ngIf="ques?.banner_points?.length > 0">
-                                <tr *ngIf="banner_group_list?.length > 0">
-                                  <th></th>
-                                  <ng-container
-                                    *ngIf="saved_banner_list.length > 0"
-                                  >
-                                    <th
-                                      *ngFor="let item of saved_banner_list"
-                                      class="text-center"
-                                    >
-                                      {{ item.group_name | titlecase }}
-                                    </th>
-                                  </ng-container>
-
-                                  <ng-container
-                                    *ngFor="let item of banner_group_list"
-                                  >
-                                    <th
-                                      class="text-center table-first-rowbg"
-                                      attr.colspan="{{ item.point.length }}"
-                                    >
-                                      {{ item.group_name | titlecase }}
-                                    </th>
-                                  </ng-container>
-                                </tr>
-                                <tr class="table-first-rowbg">
-                                  <th class="table-first-rowbg"></th>
-
-                                  <ng-container
-                                    *ngIf="saved_banner_list?.length > 0"
-                                  >
-                                    <th
-                                      *ngFor="let seg of saved_banner_list"
-                                      class="text-center table-first-rowbg"
-                                    >
-                                      {{ seg.title | titlecase }} <br />
-                                      <span class="clr_red">{{
-                                        seg.alpha | titlecase
-                                      }}</span>
-                                    </th>
-                                  </ng-container>
-
-                                  <ng-container
-                                    *ngIf="banner_group_list?.length > 0"
-                                  >
-                                    <ng-container
-                                      *ngFor="let item of banner_group_list"
-                                    >
-                                      <th
-                                        *ngFor="let seg of item.point"
-                                        class="text-center"
-                                      >
-                                        {{ seg.title | titlecase }} <br />
-                                        <span class="clr_red">{{
-                                          seg.alpha | titlecase
-                                        }}</span>
+                              <table class="table table-bordered">
+                                <thead *ngIf="ques?.banner_points.length > 0">
+                                  <tr *ngIf="banner_group_list.length > 0">
+                                    <th></th>
+                                    <ng-container *ngIf="saved_banner_list.length > 0">
+                                      <th *ngFor="let item of saved_banner_list" class="text-center">
+                                        <span [innerHTML]="item.group_name | titlecase"></span>
                                       </th>
                                     </ng-container>
-                                  </ng-container>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngIf="masterData?.platform == 'rti'">
-                                  <td
-                                    class="text-start fnt_bold width_40"
-                                  >
-                                    Base
-                                  </td>
-                                  <ng-container
-                                    *ngIf="saved_banner_list.length > 0"
-                                  >
-                                    <td
-                                      *ngFor="let cols of saved_banner_list"
-                                      class="text-center fnt_bold"
-                                    >
-                                      <span
-                                        *ngIf="
-                                          ques['row_data']?.base_text &&
-                                          ques['row_data']?.base_text[
-                                            cols.pointID
-                                          ] != '' &&
-                                            ques['row_data']?.base_text[
-                                              cols.pointID
-                                            ] != undefined
-                                        "
-                                      >
-                                        {{
-                                          ques["row_data"]?.["base_text"]?.[
-                                            cols.pointID
-                                          ]
-                                        }}
-                                      </span>
-
-                                      <span
-                                        *ngIf="
-                                          !ques['row_data'].base_text ||
-                                          !ques['row_data'].base_text[
-                                            cols.pointID
-                                          ] ||
-                                          ques['row_data']?.base_text[
-                                            cols.pointID
-                                          ] == ''
-                                        "
-                                      >
-                                        {{
-                                          ques["row_data"]?.["base"]?.[cols.pointID]
-                                        }}
-                                      </span>
-                                    </td>
-                                  </ng-container>
-
-                                  <ng-container
-                                    *ngIf="banner_group_list.length > 0"
-                                  >
-                                    <ng-container
-                                      *ngFor="let item of banner_group_list"
-                                    >
-                                      <td
-                                        *ngFor="let cols of item.point"
-                                        class="text-center fnt_bold"
-                                      >
-                                        <span
-                                          *ngIf="
-                                            ques['row_data']?.base_text &&
-                                            ques['row_data']?.base_text[
-                                              cols.pointID
-                                            ] != '' &&
-                                              ques['row_data']?.base_text[
-                                                cols.pointID
-                                              ] != undefined
-                                          "
-                                        >
-                                          {{
-                                            ques["row_data"]?.["base_text"]?.[
-                                              cols.pointID
-                                            ]
-                                          }}
-                                        </span>
-
-                                        <span
-                                          *ngIf="
-                                            !ques['row_data'].base_text ||
-                                            !ques['row_data'].base_text[
-                                              cols.pointID
-                                            ] ||
-                                            ques['row_data']?.base_text[
-                                              cols.pointID
-                                            ] == ''
-                                          "
-                                        >
-                                          {{
-                                            ques["row_data"]?.["base"]?.[
-                                              cols.pointID
-                                            ]
-                                          }}
-                                        </span>
-                                      </td>
+                              
+                                    <ng-container *ngFor="let item of banner_group_list">
+                                      <th class="text-center table-first-rowbg" attr.colspan="{{ item.point.length }}" style="background: #f7f7f7">
+                                        <span [innerHTML]="item.group_name | titlecase"></span>
+                                      </th>
                                     </ng-container>
-                                  </ng-container>
-                                </tr>
-
-                                <tr *ngIf="masterData?.platform != 'rti'">
-                                  <td
-                                    class="text-start fnt_bold width_40"
-                                  >
-                                    Base
-                                  </td>
-                                  <ng-container
-                                    *ngIf="saved_banner_list?.length > 0"
-                                  >
-                                    <td
-                                      *ngFor="let cols of saved_banner_list"
-                                      class="text-center fnt_bold"
-                                    >
-                                      {{
-                                        ques["row_data"]?.["base"]?.[cols.pointID]
-                                      }}
-                                    </td>
-                                  </ng-container>
-
-                                  <ng-container
-                                    *ngIf="banner_group_list?.length > 0"
-                                  >
-                                    <ng-container
-                                      *ngFor="let item of banner_group_list"
-                                    >
-                                      <td
-                                        *ngFor="let cols of item.point"
-                                        class="text-center fnt_bold"
-                                      >
-                                        {{
-                                          ques["row_data"]?.["base"]?.[cols.pointID]
-                                        }}
-                                      </td>
+                                  </tr>
+                                  <tr style="background: #f7f7f7">
+                                    <th class="table-first-rowbg"></th>
+                              
+                                    <ng-container *ngIf="saved_banner_list.length > 0">
+                                      <th *ngFor="let seg of saved_banner_list" class="text-center table-first-rowbg">
+                                        <span [innerHTML]="seg.title | titlecase"></span> <br />
+                                        <span class="clr_red" [innerHTML]="seg.alpha | titlecase"></span>
+                                      </th>
                                     </ng-container>
-                                  </ng-container>
-                                </tr>
-
-                                <tr *ngFor="let qt of ques.row_data._row_order">
-                                  <td class="width_40">
-                                    {{ ques["row_data"]?.["_rows"]?.[qt] }}
-                                  </td>
-                                  <ng-container
-                                    *ngIf="saved_banner_list?.length > 0"
-                                  >
-                                    <td
-                                      *ngFor="let cols of saved_banner_list"
-                                      class="text-center"
-                                      [ngStyle]="{
-                                        width:
-                                          60 / ques.banner_points.length + '%'
-                                      }"
-                                    >
-                                    <ng-container *ngIf="ques['row_data']['data']">
-                                      <div
-                                        *ngIf="
-                                          ques['row_data']?.['data']?.[qt]?.[cols.pointID] ||  ques['row_data']?.['data']?.[qt]?.[cols.pointID] == 0"
-                                      >
-                                        <ng-container
-                                          *ngIf="masterData?.platform == 'rti'"
-                                        >
-                                          <div
-                                            class="text-center"
-                                            *ngIf="
-                                              settingList?.percent == 1 &&
-                                              qt != 'r-mean' &&
-                                              qt != 'r-median' &&
-                                              qt != 'r-stdev'
-                                            "
-                                            [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}"
-                                          >
-                                            {{
-                                              ques["row_data"]?.["data"]?.[qt]?.[
-                                                cols.pointID
-                                              ]
-                                            }}
-                                          </div>
-
-                                          <div
-                                            class="text-center"
-                                            *ngIf="
-                                              (settingList?.percent == 1 ||
-                                                settingList?.count == 1) &&
-                                              (qt == 'r-mean' ||
-                                                qt == 'r-median' ||
-                                                qt == 'r-stdev')
-                                            "
-                                            [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}"
-                                          >
-                                            {{
-                                              ques["row_data"]?.["data"]?.[qt]?.[
-                                                cols.pointID
-                                              ]
-                                            }}
-                                          </div>
-                                          <div
-                                            class="text-center"
-                                            *ngIf="
-                                              settingList?.count == 1 &&
-                                              qt != 'r-mean' &&
-                                              qt != 'r-median' &&
-                                              qt != 'r-stdev'
-                                            "
-                                            [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}"
-                                          >
-                                            {{
-                                              ques["row_data"]?.["data_count"]?.[
-                                                qt
-                                              ]?.[cols.pointID]
-                                            }}
-                                          </div>
-                                        </ng-container>
-                                        <ng-container
-                                          *ngIf="masterData?.platform != 'rti'"
-                                        >
-                                          <div
-                                            class="text-center"
-                                            *ngIf="
-                                              settingList?.percent == 1 &&
-                                              qt != 'r-mean' &&
-                                              qt != 'r-median' &&
-                                              qt != 'r-stdev'
-                                            "
-                                          >
-                                            {{
-                                              ques["row_data"]?.["data"]?.[qt]?.[
-                                                cols.pointID
-                                              ]
-                                            }}
-                                          </div>
-
-                                          <div
-                                            class="text-center"
-                                            *ngIf="
-                                              (settingList?.percent == 1 ||
-                                                settingList?.count == 1) &&
-                                              (qt == 'r-mean' ||
-                                                qt == 'r-median' ||
-                                                qt == 'r-stdev')
-                                            "
-                                          >
-                                            {{
-                                              ques["row_data"]?.["data"]?.[qt]?.[
-                                                cols.pointID
-                                              ]
-                                            }}
-                                          </div>
-                                          <div
-                                            class="text-center"
-                                            *ngIf="
-                                              settingList?.count == 1 &&
-                                              qt != 'r-mean' &&
-                                              qt != 'r-median' &&
-                                              qt != 'r-stdev'
-                                            "
-                                          >
-                                            {{
-                                              ques["row_data"]?.["data_count"]?.[
-                                                qt
-                                              ]?.[cols.pointID]
-                                            }}
-                                          </div>
-                                        </ng-container>
-
-                                        <div class="text-center clr_red">
-                                          {{
-                                            ques["row_data"]?.["sigtest"]?.[qt]?.[
-                                              cols.pointID
-                                            ]
-                                          }}
-                                        </div>
-                                      </div>
+                              
+                                    <ng-container *ngFor="let item of banner_group_list">
+                                      <ng-container *ngFor="let seg of item.point">
+                                        <th class="text-center table-first-rowbg">
+                                          <span [innerHTML]="seg.title | titlecase"></span> <br />
+                                          <span class="clr_red" [innerHTML]="seg.alpha | titlecase"></span>
+                                        </th>
                                       </ng-container>
-                                      <div
-                                        *ngIf="
-                                          (ques['row_data']['data'][qt]
-                                            | json) == '{}'
-                                        "
-                                      >
-                                        0%
-                                      </div>
+                                    </ng-container>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td class="text-start fnt_bold" style="width: 40%">
+                                      <span [innerHTML]="'Base'"></span>
                                     </td>
-                                  </ng-container>
-
-                                  <ng-container
-                                    *ngIf="banner_group_list.length > 0"
-                                  >
-                                    <ng-container
-                                      *ngFor="let column of banner_group_list"
-                                    >
-                                      <td
-                                        *ngFor="let cols of column.point"
-                                        class="text-center"
-                                        [ngStyle]="{
-                                          width:
-                                            60 / ques.banner_points.length + '%'
-                                        }"
-                                      >
-                                        <div
-                                          *ngIf="
-                                            ques['row_data']?.['data']?.[qt]?.[
-                                              cols.pointID
-                                            ]
-                                          "
-                                        >
-                                          <ng-container
-                                            *ngIf="
-                                              masterData?.platform == 'rti'
-                                            "
-                                          >
-                                            <div
-                                              class="text-center"
-                                              *ngIf="
-                                                settingList?.percent == 1 &&
-                                                qt != 'r-mean' &&
-                                                qt != 'r-median' &&
-                                                qt != 'r-stdev'
-                                              "
-                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}"
-                                            >
-                                              {{
-                                                ques["row_data"]?.["data"]?.[qt]?.[
-                                                  cols.pointID
-                                                ]
-                                              }}
-                                            </div>
-
-                                            <div
-                                              class="text-center"
-                                              *ngIf="
-                                                (settingList?.percent == 1 ||
-                                                  settingList?.count == 1) &&
-                                                (qt == 'r-mean' ||
-                                                  qt == 'r-median' ||
-                                                  qt == 'r-stdev')
-                                              "
-                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}"
-                                            >
-                                              {{
-                                                ques["row_data"]?.["data"]?.[qt]?.[
-                                                  cols.pointID
-                                                ]
-                                              }}
-                                            </div>
-                                            <div
-                                              class="text-center"
-                                              *ngIf="
-                                                settingList?.count == 1 &&
-                                                qt != 'r-mean' &&
-                                                qt != 'r-median' &&
-                                                qt != 'r-stdev'
-                                              "
-                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}"
-                                            >
-                                              {{
-                                                ques["row_data"]?.["data_count"]?.[
-                                                  qt
-                                                ]?.[cols.pointID]
-                                              }}
-                                            </div>
-                                          </ng-container>
-                                          <ng-container
-                                            *ngIf="
-                                              masterData?.platform != 'rti'
-                                            "
-                                          >
-                                            <div
-                                              class="text-center"
-                                              *ngIf="
-                                                settingList?.percent == 1 &&
-                                                qt != 'r-mean' &&
-                                                qt != 'r-median' &&
-                                                qt != 'r-stdev'
-                                              "
-                                            >
-                                              {{
-                                                ques["row_data"]?.["data"]?.[qt]?.[
-                                                  cols.pointID
-                                                ]
-                                              }}
-                                            </div>
-
-                                            <div
-                                              class="text-center"
-                                              *ngIf="
-                                                (settingList?.percent == 1 ||
-                                                  settingList?.count == 1) &&
-                                                (qt == 'r-mean' ||
-                                                  qt == 'r-median' ||
-                                                  qt == 'r-stdev')
-                                              "
-                                            >
-                                              {{
-                                                ques["row_data"]?.["data"]?.[qt]?.[
-                                                  cols.pointID
-                                                ]
-                                              }}
-                                            </div>
-                                            <div
-                                              class="text-center"
-                                              *ngIf="
-                                                settingList?.count == 1 &&
-                                                qt != 'r-mean' &&
-                                                qt != 'r-median' &&
-                                                qt != 'r-stdev'
-                                              "
-                                            >
-                                              {{
-                                                ques["row_data"]?.["data_count"]?.[
-                                                  qt
-                                                ]?.[cols.pointID]
-                                              }}
-                                            </div>
-                                          </ng-container>
-
-                                          <div class="text-center clr_red">
-                                            {{
-                                              ques["row_data"]?.["sigtest"]?.[qt]?.[
-                                                cols.pointID
-                                              ]
-                                            }}
-                                          </div>
-                                        </div>
-                                        <div
-                                          *ngIf="
-                                            (ques['row_data']['data'][qt]
-                                              | json) == '{}'
-                                          "
-                                        >
-                                          0%
-                                        </div>
+                                    <ng-container *ngIf="saved_banner_list.length > 0">
+                                      <td *ngFor="let cols of saved_banner_list" class="text-center fnt_bold">
+                                        <span *ngIf="
+                                                                        ques['row_data']?.base_text &&
+                                                                        ques['row_data']?.base_text[
+                                                                          cols.pointID
+                                                                        ] != '' &&
+                                                                        ques['row_data']?.base_text[
+                                                                          cols.pointID
+                                                                        ] != undefined
+                                                                      " [innerHTML]="ques['row_data']?.['base_text']?.[cols.pointID]"></span>
+                              
+                                        <span *ngIf="
+                                                                        !ques['row_data'].base_text ||
+                                                                        !ques['row_data'].base_text[
+                                                                          cols.pointID
+                                                                        ] ||
+                                                                        ques['row_data']?.base_text[
+                                                                          cols.pointID
+                                                                        ] == ''
+                                                                      " [innerHTML]="ques['row_data']?.['base']?.[cols.pointID]"></span>
                                       </td>
                                     </ng-container>
-                                  </ng-container>
-                                </tr>
-                              </tbody>
-                            </table>
+                              
+                                    <ng-container *ngIf="banner_group_list.length > 0">
+                                      <ng-container *ngFor="let item of banner_group_list">
+                                        <td *ngFor="let cols of item.point" class="text-center fnt_bold">
+                                          <span *ngIf="
+                                                                          ques['row_data']?.base_text &&
+                                                                          ques['row_data']?.base_text[
+                                                                            cols.pointID
+                                                                          ] != '' &&
+                                                                          ques['row_data']?.base_text[
+                                                                            cols.pointID
+                                                                          ] != undefined
+                                                                        " [innerHTML]="ques['row_data']?.['base_text']?.[cols.pointID]"></span>
+                              
+                                          <span *ngIf="
+                                                                          !ques['row_data'].base_text ||
+                                                                          !ques['row_data'].base_text[
+                                                                            cols.pointID
+                                                                          ] ||
+                                                                          ques['row_data']?.base_text[
+                                                                            cols.pointID
+                                                                          ] == ''
+                                                                        " [innerHTML]="ques['row_data']?.['base']?.[cols.pointID]"></span>
+                                        </td>
+                                      </ng-container>
+                                    </ng-container>
+                                  </tr>
+                              
+                                  <tr *ngFor="let qt of ques.row_data._row_order">
+                                    <td style="width: 40%">
+                                      <span [innerHTML]="ques['row_data']?.['_rows']?.[qt]"></span>
+                                    </td>
+                                    <ng-container *ngIf="saved_banner_list.length > 0">
+                                      <td *ngFor="let cols of saved_banner_list" class="text-center" [ngStyle]="{
+                                                                      width:
+                                                                        60 / ques.banner_points.length + '%'
+                                                                    }">
+                                        <ng-container *ngIf="ques['row_data']['data']">
+                                          <div *ngIf="
+                                                                          ques['row_data']?.['data']?.[qt]?.[
+                                                                            cols.pointID
+                                                                          ] ||  ques['row_data']?.['data']?.[qt]?.[
+                                                                            cols.pointID
+                                                                          ] == 0
+                                                                        ">
+                                            <div class="text-center" *ngIf="
+                                                                            settingList?.percent == 1 &&
+                                                                            qt != 'r-mean' &&
+                                                                            qt != 'r-median' &&
+                                                                            qt != 'r-stdev'
+                                                                          "
+                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}">
+                                              <span [innerHTML]="ques['row_data']?.['data']?.[qt]?.[cols.pointID]"></span>
+                                            </div>
+                              
+                                            <div class="text-center" *ngIf="
+                                                                            (settingList?.percent == 1 ||
+                                                                              settingList?.count == 1) &&
+                                                                            (qt == 'r-mean' ||
+                                                                              qt == 'r-median' ||
+                                                                              qt == 'r-stdev')
+                                                                          "
+                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}">
+                                              <span [innerHTML]="ques['row_data']?.['data']?.[qt]?.[cols.pointID]"></span>
+                                            </div>
+                                            <div class="text-center" *ngIf="
+                                                                            settingList?.count == 1 &&
+                                                                            qt != 'r-mean' &&
+                                                                            qt != 'r-median' &&
+                                                                            qt != 'r-stdev'
+                                                                          "
+                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}">
+                                              <span [innerHTML]="
+                                                                              ques['row_data']?.['data_count']?.[
+                                                                                qt
+                                                                              ]?.[cols.pointID]
+                                                                            "></span>
+                                            </div>
+                              
+                                            <div class="text-center clr_red">
+                                              <span [innerHTML]="ques['row_data']?.['sigtest']?.[qt]?.[cols.pointID]"></span>
+                                            </div>
+                                          </div>
+                                        </ng-container>
+                                        <div *ngIf="
+                                                                        (ques['row_data']['data'][qt]
+                                                                          | json) == '{}'
+                                                                      " [innerHTML]="'0%'"></div>
+                                      </td>
+                                    </ng-container>
+                              
+                                    <ng-container *ngIf="banner_group_list.length > 0">
+                                      <ng-container *ngFor="let column of banner_group_list">
+                                        <td *ngFor="let cols of column.point" class="text-center" [ngStyle]="{
+                                                                        width:
+                                                                          60 / ques.banner_points.length + '%'
+                                                                      }">
+                                          <div *ngIf="
+                                                                          ques['row_data']?.['data']?.[qt]?.[
+                                                                            cols.pointID
+                                                                          ]
+                                                                        ">
+                                            <div class="text-center" *ngIf="
+                                                                              settingList?.percent == 1 &&
+                                                                              qt != 'r-mean' &&
+                                                                              qt != 'r-median' &&
+                                                                              qt != 'r-stdev'
+                                                                            "
+                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}">
+                                              <span [innerHTML]="ques['row_data']?.['data']?.[qt]?.[cols.pointID]"></span>
+                                            </div>
+                              
+                                            <div class="text-center" *ngIf="
+                                                                              (settingList?.percent == 1 ||
+                                                                                settingList?.count == 1) &&
+                                                                              (qt == 'r-mean' ||
+                                                                                qt == 'r-median' ||
+                                                                                qt == 'r-stdev')
+                                                                            "
+                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}">
+                                              <span [innerHTML]="ques['row_data']?.['data']?.[qt]?.[cols.pointID]"></span>
+                                            </div>
+                                            <div class="text-center" *ngIf="
+                                                                              settingList?.count == 1 &&
+                                                                              qt != 'r-mean' &&
+                                                                              qt != 'r-median' &&
+                                                                              qt != 'r-stdev'
+                                                                            "
+                                              [ngClass]="{'low_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] < low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium'), 'high_base_table_color': (ques['row_data']?.['responding_base'] && ques['row_data']?.['responding_base']?.[qt]?.[cols.pointID] >= low_base_sample_value) && (ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')}">
+                                              <span [innerHTML]="
+                                                                                ques['row_data']?.['data_count']?.[
+                                                                                  qt
+                                                                                ]?.[cols.pointID]
+                                                                              "></span>
+                                            </div>
+                              
+                                            <div class="text-center clr_red">
+                                              <span [innerHTML]="ques['row_data']?.['sigtest']?.[qt]?.[cols.pointID]"></span>
+                                            </div>
+                                          </div>
+                                          <div *ngIf="
+                                                                          (ques['row_data']['data'][qt]
+                                                                            | json) == '{}'
+                                                                        " [innerHTML]="'0%'"></div>
+                                        </td>
+                                      </ng-container>
+                                    </ng-container>
+                                  </tr>
+                                </tbody>
+                              </table>
                           </div>
 
                           <div *ngIf="masterData?.bannerInfo?.statGroup">

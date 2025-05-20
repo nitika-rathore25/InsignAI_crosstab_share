@@ -21,12 +21,12 @@ export class UrlsService {
   constructor() {
     if (environment.staging == true) {
       this.masterUrl = environment.baseUrlStaging;
-      this.url = environment.baseUrlStaging + '/insignai-services-v1';
-      this.urlCrosstab = environment.baseUrlStaging + '/insignai-services-v1/crosstabShare';
-      this.urlOutput = environment.baseUrlStaging + '/insignai-services-v1/outputShare';
-      this.userApi = environment.baseUrlStaging + '/insignai-services-v1';
+      this.url = environment.baseUrlStaging;
+      this.urlCrosstab = environment.baseUrlStaging + '/crosstabShare';
+      this.urlOutput = environment.baseUrlStaging + '/outputShare';
+      this.userApi = environment.baseUrlStaging;
       this.sampleUrl = environment.baseUrlStaging + '/e451-demo';
-      this.fileUrl = environment.baseUrlStaging + '/insignai-services-v1';
+      this.fileUrl = environment.baseUrlStaging;
     }
 
     else if (environment.production == true) {
