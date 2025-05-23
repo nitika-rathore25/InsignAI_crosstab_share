@@ -95,6 +95,12 @@ export class EditTableListComponent implements OnInit {
             this.saved_banner_list.push(bannerPoint);
           }
         });
+        for (const [key, value] of arrObj1) {
+          this.banner_group_list.push({
+            "group_name": key,
+            "point": value,
+          })
+        }
         this.loaderService.show();
         let bannerJsn = {
           "studyID": this.masterData['urlStudyId'],
@@ -168,7 +174,6 @@ export class EditTableListComponent implements OnInit {
       this.systemSr.internalNavigate();
     }
   }
-
 
   async getTableLogicData() {
     let headers = this.systemSr.getMasterToken();
