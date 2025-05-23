@@ -1,31 +1,19 @@
-.main_card {
-    /* background: var(--altColor2)!important; */
-    z-index: 999;
-}
-.nav_active {
-    /* background: var(--altColor2); */
-    /* border-bottom: 3px solid #522181; */
-    /* color: #522181 !important; */
-}
+
 .header-main {
-    background-color: var(--altColor2);
+    background-color: #fff;
     width: 100%;
     position: fixed;
-    color: var(--altColor2);
+    color: #fff;
     top: 0;
     z-index: 999;
     padding: 7px;
-    border-bottom: 1px solid #eee;
-}
-
-.navbar-nav li {
-    cursor: pointer!important;
+    border-bottom: 2px solid #eee;
 }
 
 .header_title {
     color: #39393E;
     font-weight: 500;
-    font-size: 25px;
+    font-size: 22px;
     pointer-events: none;
 }
 
@@ -38,20 +26,14 @@
     box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
     border: 0px solid #e9ecef;
     font-size: 14px;
-    /* top: -17px!important;
-    left: -12%!important; */
-}
-
-.drop_pos {
-    top: 55px!important;
-    position: fixed;
-    left: 87%!important;
+    top: -17px!important;
+    left: -12%!important;
 }
 .dropdown-menu::after {
     content: '';
     width: 13px;
     height: 13px;
-    background: var(--altColor2)f;
+    background: #ffff;
     position: absolute;
     top: -6px;
     right: 16px;
@@ -92,7 +74,7 @@
 .upload-btn-wrapper {
     position: relative;
     overflow: hidden;
-    display: block;
+    display: inline-block;
 }
 
 .upl_btn {
@@ -111,7 +93,7 @@
 }
 
 .s_ds{
-    border: 2px solid var(--altColor2);
+    border: 2px solid #fff;
     border-radius: 4px;
 }
 
@@ -121,57 +103,50 @@
 }
 
 .s_ds:hover i {
-    color: #522181!important;
-    cursor: pointer!important;
+    display: inline-block!important;
 }
 .elip_s{
-    right:-14%;
+    right:-28px;
     position:relative;
     font-size: 1.2rem;
     top: -35px;
-    color: var(--altColor2);
-    cursor: none;
+    color: #522181;
 }
 
 .elip_s_file{
-    right: -24%;
+    right:-36px;
     position:relative;
     font-size: 1.2rem;
-    top: -23px;
-    color: var(--altColor2);
-    cursor: none;
+    top: -24px;
+    color: #522181;
 }
 .clr_bl {
     color: #522181;
 }
-.mx_dy {
-    max-height: calc(100vh - 140px) !important;
-    overflow: auto;
+.nav{
+  background: #1a405c;
+    z-index: 999;
+    color: #fff!important;
 }
-.m_title {
-    color: #522181;
-}
-
-.help_c {
-    display: flex;
-    align-items: center;
-    vertical-align: middle;
-    font-size: 0.9rem;
-}
-
-.help_back_btn {
-    border: 1px solid #11729c;
-    background-color: transparent;
-    color: #11729c;
-}
-
-.primary_bg{
-  background: #1a405c!important;
-}
-.color_white{
+h4{
   color: white!important;
 }
+.white_clr{
+  color: white;
+}
 
-.study_name_width{
+.study_name{
     min-width: 125px;
 }
+.font-size-label {
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.fs_15{
+    font-size: 1.5rem!important;
+    }
+
+    .h_60{
+        height: 60px;
+    }
