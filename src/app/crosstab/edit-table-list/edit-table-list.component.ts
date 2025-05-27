@@ -84,7 +84,7 @@ export class EditTableListComponent implements OnInit {
 
       this.masterData["bannerInfo"] = updatedBannerInfo;
       this.settingList = updatedBannerInfo;
-
+     
       if (this.settingList.bannerPoint.length > 0) {
         this.banner_group_list = [];
         this.saved_banner_list = [];
@@ -119,7 +119,6 @@ export class EditTableListComponent implements OnInit {
           if (response?.header?.code === 200) {
             this.tableLocalData = this.systemSr.getBannerData();
             this.tableList = this.tableLocalData?.tableLoaded ?? response.response;
-
             this.tableList.forEach(obj => {
               obj.description = obj.description.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
             });
@@ -162,6 +161,7 @@ export class EditTableListComponent implements OnInit {
             });
           }
         });
+       
       } else {
         this.navigateUrl("edit-banner");
       }
@@ -179,9 +179,13 @@ export class EditTableListComponent implements OnInit {
       this.httpService.callApi('crossTabList', { body: studyJsonSet }).subscribe((response) => {
         const bannerList = response["response"] || [];
         if (!bannerList.length) return resolve(null);
+        const matched = bannerList.find(b => b.bannerID === this.masterData["bannerInfo"]["bannerID"]);
+        if (!matched) {
+          this.router.navigate(['']); 
+          return resolve(null);
+        }
 
         let completed = 0;
-
         bannerList.forEach((ban) => {
           const bannerJsn = {
             studyID: this.masterData['urlStudyId'],
