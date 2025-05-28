@@ -387,7 +387,7 @@ export class SystemService {
   postError(response) {
     this.loaderService.hide();
     if (response["header"]["code"] == 403) {
-      this.toastr.warning(response["header"]["message"], '');
+      this.toastr.error(response["header"]["message"], '');
     }
     else {
       this.toastr.error(response["header"]["message"], '');
@@ -397,7 +397,7 @@ export class SystemService {
   confirmartion(error) {
     if (error.status == 403) {
       this.loaderService.hide();
-      this.toastr.warning(error.error.header.message, '');
+      this.toastr.error(error.error.header.message, '');
     }
     else if (error.status == 401) {
       this.logout();
