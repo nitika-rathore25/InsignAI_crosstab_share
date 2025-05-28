@@ -75,82 +75,85 @@ export class EditTableListComponent implements OnInit {
 
   ngOnInit() {
     this.masterData = this.systemSr.getLocalStorage();
-    if (this.masterData["bannerInfo"]["bannerID"]) {
-      this.settingList = this.masterData["bannerInfo"];
 
+    this.callBannerPoints().then((updatedBannerInfo) => {
+      if (!updatedBannerInfo || !updatedBannerInfo.bannerID) {
+        this.systemSr.internalNavigate();
+        return;
+      }
+
+      this.masterData["bannerInfo"] = updatedBannerInfo;
+      this.settingList = updatedBannerInfo;
+     
       if (this.settingList.bannerPoint.length > 0) {
         this.banner_group_list = [];
         this.saved_banner_list = [];
         const arrObj1 = new Map();
-        const arrObj2 = new Map();
+
         this.settingList.bannerPoint.forEach(bannerPoint => {
-          if (Object.keys(arrObj1).indexOf(bannerPoint.bannerGroup.toLowerCase()) < 0 && bannerPoint.bannerGroup != "") {
-            arrObj1.set(bannerPoint.bannerGroup.toLowerCase(), []);
-          }
-          if (bannerPoint.bannerGroup != "") {
-            let fl_list = this.settingList.bannerPoint.filter((fl) => fl.bannerGroup.toLowerCase() === bannerPoint.bannerGroup.toLowerCase());
-            arrObj1.set(bannerPoint.bannerGroup.toLowerCase(), fl_list);
-          }
-          else {
+          if (bannerPoint.bannerGroup) {
+            const key = bannerPoint.bannerGroup.toLowerCase();
+            if (!arrObj1.has(key)) {
+              const fl_list = this.settingList.bannerPoint.filter(fl => fl.bannerGroup.toLowerCase() === key);
+              arrObj1.set(key, fl_list);
+            }
+          } else {
             this.saved_banner_list.push(bannerPoint);
           }
         });
-        this.loaderService.show();
-        let bannerJsn = {
-          "studyID": this.masterData['urlStudyId'],
-          "bannerID": this.masterData["bannerInfo"]["bannerID"]
+
+        for (const [key, value] of arrObj1) {
+          this.banner_group_list.push({
+            group_name: key,
+            point: value,
+          });
         }
+
+        this.loaderService.show();
+        const bannerJsn = {
+          studyID: this.masterData['urlStudyId'],
+          bannerID: this.masterData["bannerInfo"]["bannerID"]
+        };
+
         this.httpService.callApi('bannerTableList', { body: bannerJsn }).subscribe((response) => {
-          let viewResp = response["header"]["code"];
-          if (viewResp == 200) {
+          if (response?.header?.code === 200) {
             this.tableLocalData = this.systemSr.getBannerData();
-            if (this.tableLocalData != undefined) {
-              if (this.tableLocalData["tableLoaded"] != undefined) {
-                this.tableList = this.tableLocalData["tableLoaded"];
-              }
-              else {
-                this.tableList = response["response"];
-              }
-            }
-            else {
-              this.tableList = response["response"];
-            }
+            this.tableList = this.tableLocalData?.tableLoaded ?? response.response;
             this.tableList.forEach(obj => {
               obj.description = obj.description.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
             });
 
-
             this.httpService.callApi('allTableQuesList', { body: bannerJsn }).subscribe((response) => {
-              let viewResp = response["header"]["code"];
-              if (viewResp == 200) {
-                this.tableQuestionList = response["response"];
-                let studyJsonSet = {
-                  "studyID": this.masterData['urlStudyId']
-                }
+              if (response?.header?.code === 200) {
+                this.tableQuestionList = response.response;
+
+                const studyJsonSet = {
+                  studyID: this.masterData['urlStudyId']
+                };
+
                 this.httpService.callApi('crossTabList', { body: studyJsonSet }).subscribe((response) => {
-                  let viewResp = response["header"]["code"];
-                  if (viewResp == 200) {
-                    if (response["response"]) {
-                      this.bannerList = response["response"];
-                      response["response"].forEach(ban => {
-                        if (ban.bannerID == this.settingList.bannerID) {
-                          this.settingList["statGroup"] = ban.statGroup;
-                          this.settingList["tb_enabled"] = ban.tb_enabled;
-                          this.settingList["count"] = ban.count;
-                          this.settingList["percent"] = ban.percent;
-                          this.settingList["description"] = ban.description;
-                          this.settingList["title"] = ban.title;
-                        }
-                      });
+                  if (response?.header?.code === 200 && response.response) {
+                    this.bannerList = response.response;
 
-                      this.loaderService.hide();
+                    const selectedBanner = this.bannerList.find(b => b.bannerID === this.settingList.bannerID);
+                    if (selectedBanner) {
+                      this.settingList = {
+                        ...this.settingList,
+                        statGroup: selectedBanner.statGroup,
+                        tb_enabled: selectedBanner.tb_enabled,
+                        count: selectedBanner.count,
+                        percent: selectedBanner.percent,
+                        description: selectedBanner.description,
+                        title: selectedBanner.title
+                      };
+                    }
 
-                      if (this.tableLocalData == undefined) {
-                        this.getTableLogicData();
-                      }
-                      else {
-                        this.el.nativeElement.querySelector("#showToast").classList.remove("show");
-                      }
+                    this.loaderService.hide();
+
+                    if (!this.tableLocalData) {
+                      this.getTableLogicData();
+                    } else {
+                      this.el.nativeElement.querySelector("#showToast").classList.remove("show");
                     }
                   }
                 });
@@ -158,17 +161,56 @@ export class EditTableListComponent implements OnInit {
             });
           }
         });
-      }
-
-      else {
+       
+      } else {
         this.navigateUrl("edit-banner");
       }
-    }
-    else {
-      this.systemSr.internalNavigate();
-    }
+    });
   }
+  
 
+
+  callBannerPoints(): Promise<any> {
+    return new Promise((resolve) => {
+      const studyJsonSet = {
+        studyID: this.masterData['urlStudyId']
+      };
+
+      this.httpService.callApi('crossTabList', { body: studyJsonSet }).subscribe((response) => {
+        const bannerList = response["response"] || [];
+        if (!bannerList.length) return resolve(null);
+        const matched = bannerList.find(b => b.bannerID === this.masterData["bannerInfo"]["bannerID"]);
+        if (!matched) {
+          this.router.navigate(['']); 
+          return resolve(null);
+        }
+
+        let completed = 0;
+        bannerList.forEach((ban) => {
+          const bannerJsn = {
+            studyID: this.masterData['urlStudyId'],
+            bannerID: ban.bannerID
+          };
+
+          this.httpService.callApi('bannerPointList', { body: bannerJsn }).subscribe((resp) => {
+            if (resp?.header?.code === 200) {
+              ban.bannerPoint = resp.response;
+            } else {
+              ban.bannerPoint = [];
+            }
+
+            completed++;
+            if (completed === bannerList.length) {
+              const matched = bannerList.find(b => b.bannerID === this.masterData["bannerInfo"]["bannerID"]);
+              resolve(matched ?? null);
+            }
+          });
+        });
+      });
+    });
+  }
+  
+  
 
   async getTableLogicData() {
     let headers = this.systemSr.getMasterToken();

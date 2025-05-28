@@ -118,7 +118,7 @@ export class CrosstabComponent implements OnInit {
         this.tableApis();
       }
       else {
-        this.toastr.warning('Incorrect Password')
+        this.toastr.error('Incorrect Password')
       }
     });
     // }
