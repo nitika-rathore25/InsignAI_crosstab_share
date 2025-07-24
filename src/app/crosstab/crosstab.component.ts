@@ -68,7 +68,6 @@ export class CrosstabComponent implements OnInit {
     this.display = 'flex'
     this.studyId = this.activatedRoute.snapshot.queryParamMap["params"]['switch'];
     this.masterData = this.systemSr.getLocalStorage();
-    console.log(this.masterData)
     if (!this.studyId && this.masterData) {
       if (this.masterData['urlStudyId']) {
         this.studyId = this.masterData['urlStudyId']
@@ -91,14 +90,12 @@ export class CrosstabComponent implements OnInit {
       bannerTitle: ['', Validators.required],
       description: ['', Validators.required],
     });
-    console.log(this.studyId)
     // this.masterData = this.systemSr.getLocalStorage();
     // if ((this.masterData.isOwner == 1 || this.masterData.isOutput == 1)) {
     let studyJsonSet = {
       "studyID": this.studyId,
       "switchKey": password
     }
-    console.log(studyJsonSet)
     this.loaderService.show();
     this.httpService.callApi('studyInfo', { body: studyJsonSet }).subscribe((response) => {
       let viewResp = response["header"]["code"];
