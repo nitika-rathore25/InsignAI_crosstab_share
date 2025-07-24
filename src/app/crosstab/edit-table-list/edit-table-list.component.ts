@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import DOMPurify from 'dompurify';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-edit-table-list',
@@ -67,7 +68,7 @@ export class EditTableListComponent implements OnInit {
   qType: any;
   saved_banner_list = [];
   banner_group_list = [];
-
+  low_base_sample_value: any = environment.SAMPLE_BASE;
   constructor(private http: HttpClient, private fb: FormBuilder, public systemSr: SystemService,
     private el: ElementRef, private router: Router, private httpService: HttpService,
     private loaderService: LoaderService, private toastr: ToastrService, private sanitizer: DomSanitizer) {

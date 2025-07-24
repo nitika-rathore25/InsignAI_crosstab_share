@@ -16,7 +16,7 @@ export class HttpService {
 
   callApi(action, options: { body?: any; headers?: HttpHeaders; params?: HttpParams; pathVariable?: any; observe?: "response"; responseType?: 'json' }): Observable<any> {
     let urlObject = this.urlsService.urlObject[action];
-    console.log(action)
+
     let url = urlObject.url + (options.pathVariable || '');
 
     if (action != 'login' && action != "notification" && action != "validateEmail" && action != "validatePassKey" && action != 'studyInfo') {

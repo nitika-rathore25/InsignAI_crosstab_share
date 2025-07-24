@@ -516,21 +516,21 @@
                             </p>
                           </div>
                           <p
-                            *ngIf="ques['row_data']?.['is_base'] != '' && ques['row_data']?.['is_base'] == 1 && masterData?.platform == 'rti' && (ques?.qType != 'numeric-row-list' && ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')"
+                            *ngIf="ques['row_data']?.['is_base'] != '' && ques['row_data']?.['is_base'] == 1 && (ques?.qType != 'numeric-row-list' && ques?.qType != 'open-end-large' && ques?.qType != 'open-end-medium')"
                             class="fst-italic lblData"
                           >
                             The percentage in gray indicate samples sizes where
                             n&lt;{{ low_base_sample_value }}
                           </p>
                           <p
-                            *ngIf="ques['row_data']?.['is_base'] != '' && ques['row_data']?.['is_base'] == 1 && masterData?.platform == 'rti' && ques?.qType == 'numeric-row-list' && ques.qID != 'd2'"
+                            *ngIf="ques['row_data']?.['is_base'] != '' && ques['row_data']?.['is_base'] == 1 && ques?.qType == 'numeric-row-list' && ques.qID != 'd2'"
                             class="fst-italic lblData"
                           >
                             The mean in gray indicate samples sizes where
                             n&lt;{{ low_base_sample_value }}
                           </p>
                           <p
-                            *ngIf="ques['row_data']?.['is_base'] != '' && ques['row_data']?.['is_base'] == 1 && masterData?.platform == 'rti' && ques?.qType == 'numeric-row-list' && ques.qID == 'd2'"
+                            *ngIf="ques['row_data']?.['is_base'] != '' && ques['row_data']?.['is_base'] == 1 && ques?.qType == 'numeric-row-list' && ques.qID == 'd2'"
                             class="fst-italic lblData"
                           >
                             The percentage in gray indicate samples sizes where
@@ -1542,18 +1542,8 @@
             <div class="table-responsive">
               <table class="table table-bordered">
                 <thead>
-                  <tr *ngIf="masterData?.platform == 'rti'">
-                    <th
-                      colspan="6"
-                      class="text-end"
-                      *ngIf="editQuestion?.['qType'] && (editQuestion['qType'] == 'single-select' || editQuestion['qType'] == 'single-select-drop-down' || editQuestion['qType'] == 'single-select-horizontal-grid' || editQuestion['qType'] == 'grid-row-single-select' || editQuestion['qType'] == 'grid-row-single-select-carousel' || editQuestion['qType'] == 'grid-column-single-select') && !editQuestion?.['is_summary']"
-                    >
-                      <button (click)="addRowOption()" class="btn create_btn">
-                        <i class="fa fa-plus"></i> Create Row
-                      </button>
-                    </th>
-                  </tr>
-                  <tr *ngIf="masterData?.platform != 'rti'">
+                  <tr
+                    *ngIf="editQuestion['qType'] !== 'open-end-medium' && editQuestion['qType'] !== 'open-end-large' && editQuestion['qType'] !== 'sum-upto-n' && editQuestion['qType'] !== 'percentage-row-list' && editQuestion['qType'] !== 'numeric-row-list' && editQuestion['qType'] !== 'max-diff'">
                     <th colspan="6" class="text-end">
                       <button (click)="addRowOption()" class="btn create_btn">
                         <i class="fa fa-plus"></i> Create Row
@@ -1618,6 +1608,221 @@
                         id="op_{{ i }}"
                         value="{{ op.optionText }}"
                       />
+                          
+  <!-- edit logic added by nititka -->
+   <ng-conatiner *ngIf="(op?.old_q == 1 || op.newRow) && !op?.selectedType">
+    <div *ngIf="op?.optionLogic?.length > 0">
+              <div *ngFor="let lgic of op.optionLogic; let l = index">
+                {{ l + 1 }}.
+                <span [innerHTML]="lgic.rowLogic" class="clr_red">
+                  {{ lgic.rowLogic }}
+                </span>
+                <span
+                  class="ms-4 cursor-pointer"
+                  title="Click to remove: {{ lgic.rowLogic }}"
+                  (click)="removeExistLogicEdit(l, op.optionLogic)"
+                  ><i class="fa fa-trash-o clr_red cursor-pointer"></i
+                ></span>
+                <br />
+              </div>
+            </div>
+
+  <div class="col-lg-12 text-start lgic_{{ i }}">
+    <div class="logical_option{{ i }} root br_logic mt-1"
+      *ngFor="let rw of op.op_logic; let a = index; let last = last">
+      <div class="parent_class_logic{{ i }} row">
+        <div class="w-auto">
+          <div class="form-group mb-0">
+            <select class="form-select custom-form lgc_var{{ i }} clr_red" id="cond{{ a }}{{ i }}"
+              (change)="selectedOption($event, a, i)">
+              <option value="">Select variables</option>
+              <optgroup label="{{ access.key }}" *ngFor="let access of logic_var_op | keyvalue">
+                <option *ngFor="let items of logic_var_op[access.key]" value="{{ items.code }}"
+                  attr.data="{{ items.show }}" ariaLabel="{{ items.param }}" [selected]="rw.variable === items.code">
+                  {{ items.show }}
+                </option>
+              </optgroup>
+              <!-- Added addCustomArr loop -->
+              <optgroup *ngIf="addCustomArr?.length > 0" label="Custom">
+                <option *ngFor="let cust of addCustomArr" value="{{ cust.code }}" [selected]="rw.variable === cust.code">
+                  {{ cust.show }}
+                </option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+  <ng-container *ngIf="selected_arr[a + i] > 0">
+        <div  class="col-lg-2 me-2 w-auto">
+          <div class="form-group mb-0">
+            <select class="form-select lg_options{{ i }} custom-form clr_red" id="operator{{ a }}{{ i }}"
+              style="border: none" (change)="selectedSubOptions($event, a, i)">
+              <option value="">Select options</option>
+              <option *ngFor="let ops of selected_options[a + i]" value="{{ ops.code }}"
+                [selected]="rw.operator === ops.code">
+                {{ ops.show == 'is present in ' ? 'any' : ops.show }}
+              </option>
+              <!-- Added addCustomArr loop for options if needed -->
+              <option *ngFor="let custOp of addCustomArr" value="{{ custOp.code }}"
+                [selected]="rw.operator === custOp.code">
+                {{ custOp.show }}
+              </option>
+            </select>
+          </div>
+        </div>
+  </ng-container>
+        <!-- Rest of the existing code remains exactly the same -->
+         <ng-container *ngIf="show_control[a + i + 'len'] == 0 || selected_arr[a + i] == 0">
+        <div class="w-auto">
+          <div class="form-group mb-0">
+            <select class="form-select custom-form lg_operator{{ i }} clr_red" id="andOper{{ a }}{{ i }}">
+              <option value="">Select operator</option>
+              <option *ngFor="let oper of logic_operators" value="{{ oper.code }}"
+                [selected]="rw.andOperator === oper.code">
+                {{ oper.show == 'is present in ' ? 'any' : oper.show }}
+              </option>
+            </select>
+          </div>
+        </div>
+  </ng-container>
+<ng-container *ngIf="show_control[a + i + 'len'] > 0 && selected_arr[a + i] > 0">
+        <div class="col-lg-2 w-auto" >
+          <div class="form-group mb-0">
+            <select class="form-select custom-form lg_subOption{{ i }} clr_red" style="border: none"
+              id="options{{ a }}{{ i }}">
+              <option value="">Select</option>
+              <option *ngFor="let option of show_control[a + i + 'option']" value="{{ option.code }}"
+                [innerHTML]="option.show" [selected]="rw.value === option.code">
+                {{ option.show }}
+              </option>
+              <!-- Added addCustomArr loop for suboptions if needed -->
+              <option *ngFor="let custSub of addCustomArr" value="{{ custSub.code }}"
+                [selected]="rw.value === custSub.code">
+                {{ custSub.show }}
+              </option>
+            </select>
+          </div>
+        </div>
+  </ng-container>
+  <ng-container *ngIf="show_control[a + i + 'len'] == 0 || selected_arr[a + i] == ''">
+        <div class="col-lg-1 w-auto" >
+          <div class="form-group mb-0">
+            <input autocomplete="off" class="form-control custom-form lg_value{{ i }} clr_red" type="text"
+              placeholder="Enter value" maxlength="100" id="invalue{{ a }}{{ i }}" [value]="rw.value" />
+          </div>
+        </div>
+  </ng-container>
+        <div class="col-lg-3 text-center w-auto">
+          <i class="fa fa-expand clr_blue ms-2 p-2 undo_btn" (click)="addOp(rw)" title="Add add/or condition"></i>
+          <i class="fa fa-undo p-2 ms-2 undo_btn" (click)="resetOpLogic(a, i)" title="Click here to reset"></i>
+          <i class="fa fa-trash-o clr_red ms-2 p-2 delete_btn" (click)="rmOpLogic(a, op)" *ngIf="a > 0"
+            title="Delete logic"></i>
+          <i class="fa fa-plus ms-2 p-2 add_btn undo_btn" (click)="addAnLogic(op)" *ngIf="a == 0" title="Add logic"></i>
+        </div>
+      </div>
+  
+      <div *ngIf="rw.options">
+        <div class="row child_class_logic_{{ i }} root mt-1"
+          *ngFor="let and of rw.options; let j = index; let last = last">
+          <div class="ms-5 w-auto">
+            <div class="form-group mb-0">
+              <select class="form-select custom-form and_operator{{ i }} clr_red" id="andor{{ j }}{{ a }}{{ i }}">
+                <option value=" AND " [selected]="and.andOr === ' AND '">AND</option>
+                <option value=" OR " [selected]="and.andOr === ' OR '">OR</option>
+              </select>
+            </div>
+          </div>
+          <div class="w-auto">
+            <div class="form-group mb-0">
+              <select class="form-select custom-form lg_question_{{ i }} clr_red" id="varand{{ j }}{{ a }}{{ i }}"
+                (change)="slOp($event, j, a, i)">
+                <option value="">Select variables</option>
+                <optgroup label="{{ access.key }}" *ngFor="let access of logic_var_op | keyvalue">
+                  <option *ngFor="let items of logic_var_op[access.key]" value="{{ items.code }}"
+                    attr.data="{{ items.show }}" ariaLabel="{{ items.param }}" [selected]="and.variable === items.code">
+                    {{ items.show }}
+                  </option>
+                </optgroup>
+                <!-- Added addCustomArr loop for child variables -->
+                <optgroup *ngIf="addCustomArr?.length > 0" label="Custom">
+                  <option *ngFor="let cust of addCustomArr" value="{{ cust.code }}"
+                    [selected]="and.variable === cust.code">
+                    {{ cust.show }}
+                  </option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <ng-container *ngIf="selected_arr1[j + '' + a + i]">
+          <div  class="w-auto">
+            <div class="form-group mb-0">
+              <select class="form-select custom-form lg_op_options{{ i }} clr_red" id="v{{ j }}{{ a }}{{ i }}"
+                (change)="addOpSel($event, j, a, i)">
+                <option value="">Select options</option>
+                <option *ngFor="let it of selected_options_arr[j + '' + a + i]" value="{{ it.code }}"
+                  [selected]="and.operator === it.code">
+                  {{ it.show == 'is present in ' ? 'any' : it.show }}
+                </option>
+                <!-- Added addCustomArr loop for child options -->
+                <option *ngFor="let custOp of addCustomArr" value="{{ custOp.code }}"
+                  [selected]="and.operator === custOp.code">
+                  {{ custOp.show }}
+                </option>
+              </select>
+            </div>
+          </div>
+          </ng-container>
+  
+          <div class="w-auto">
+            <div class="form-group mb-0"
+              *ngIf="show_control1[j + i + '' + a + 'len'] == 0 || selected_arr1[j + '' + a + i] == ''">
+              <select class="form-select custom-form lg_op_operator{{ i }} clr_red" id="andOper{{ j }}{{ a }}{{ i }}">
+                <option value="">Select operator</option>
+                <option *ngFor="let opert of logic_operators" value="{{ opert.code }}"
+                  [selected]="and.andOperator === opert.code">
+                  {{ opert.show == 'is present in ' ? 'any' : opert.show }}
+                </option>
+              </select>
+            </div>
+          </div>
+  
+          <ng-container *ngIf="show_control1[j + i + '' + a + 'len'] > 0">
+          <div class="col-lg-2 me-3 w-auto" >
+            <div class="form-group mb-0">
+              <select class="form-select custom-form lg_op_subOption{{ i }} clr_red" style="border: none"
+                id="op{{ j }}{{ a }}{{ i }}">
+                <option value="">Select</option>
+                <option *ngFor="let optionSub of show_control1[j + i + '' + a + 'option']" value="{{ optionSub.code }}"
+                  [innerHTML]="optionSub.show" [selected]="and.value === optionSub.code">
+                  {{ optionSub.show }}
+                </option>
+                <!-- Added addCustomArr loop for child suboptions -->
+                <option *ngFor="let custSub of addCustomArr" value="{{ custSub.code }}"
+                  [selected]="and.value === custSub.code">
+                  {{ custSub.show }}
+                </option>
+              </select>
+            </div>
+          </div>
+          </ng-container>
+          <ng-container *ngIf="show_control1[j + i + '' + a + 'len'] == 0 || selected_arr1[j + '' + a + i] == ''">
+          <div class="col-lg-1 w-auto">
+            <div class="form-group mb-0">
+              <input autocomplete="off" class="form-control custom-form lg_op_value{{ i }} clr_red" type="text"
+                placeholder="Enter value" maxlength="100" id="invalue{{ j }}{{ a }}{{ i }}" [value]="and.value" />
+            </div>
+          </div>
+          </ng-container>
+  
+          <div class="col-lg-3 text-center w-auto">
+            <i class="fa fa-undo p-2 ms-2 undo_btn" (click)="resetopAnd(j, a, i)"></i>
+            <i class="fa fa-trash-o clr_red ms-2 p-2 delete_btn" (click)="rmAndLgic(rw, j)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ng-conatiner>
+
                       <div
                         class="show_net_{{ op?.newID }}"
                         *ngIf="op?.net_val == 1 && op?.old_q == 0"
@@ -1628,6 +1833,7 @@
                             (op.net | json) == '{}'
                         }"
                       >
+                      <span class="clr_red fst-italic" *ngIf="editQuestion?.['qID'].includes('CT')">*NET works for mutually exclusive rows<br></span>
                         <div
                           class="d-inline-block me-3"
                           *ngFor="let main of mainDropArr; let k = index"
@@ -1636,6 +1842,7 @@
                             class="custom-control custom-checkbox mt-2 d-inline-block"
                             *ngIf="main?.old_q == 1"
                           >
+                          
                             <input
                               type="checkbox"
                               class="custom-control-input net_type{{ i }}"
@@ -1668,7 +1875,7 @@
                           "
                         >
                           <option value="">Select Type</option>
-                          <option
+                          <option *ngIf="editQuestion?.['qType'] != 'open-end-small' || editQuestion?.['qID'] === 'S1'"
                             value="Net"
                             [selected]="
                               op?.net_val == 1 && (op.net | json) != '{}'
@@ -1676,15 +1883,21 @@
                           >
                             Net
                           </option>
-                          <option
-                            value="Mean"
-                            [selected]="
-                              op?.mean == 1 && (op.net | json) != '{}'
-                            "
-                          >
+
+                          <option *ngIf="op?.mean == 1" value="Mean" [selected]="op?.mean == 1 && (op.net | json) != '{}'"
+                            [hidden]="editQuestion?.['qType'] === 'open-end-small'">
                             Mean
                           </option>
+
                           <option
+                            *ngIf="editQuestion?.['qType'] !== 'ranking' && editQuestion?.['qType'] !== 'drag-n-drop-ranking' && editQuestion?.['qType'] !== 'drag-n-drop-ranking-column' &&(editQuestion?.['qType'] !== 'open-end-small' || editQuestion?.['qID'] == 'S1')"
+                            value="{{ editQuestion?.['qType'] === 'multiple-select' || editQuestion?.['qType'] === 'grid-row-multiple-select' ||
+                            editQuestion?.['qType'] === 'grid-column-multiple-select' ? 'Mean number of mentions' : 'Mean' }}" [selected]="op?.mean == 1 && (op.net | json) != '{}'">
+                            {{ editQuestion?.['qType'] === 'multiple-select' || editQuestion?.['qType'] === 'grid-row-multiple-select' ||
+                            editQuestion?.['qType'] === 'grid-column-multiple-select' ? 'Mean number of mentions' : 'Mean' }}
+                          </option>
+
+                          <option *ngIf="editQuestion?.['qType'] !== 'grid-row-multiple-select' && editQuestion?.['qType'] !== 'grid-column-multiple-select' && editQuestion?.['qType'] !== 'ranking' && editQuestion?.['qType'] !== 'drag-n-drop-ranking' && editQuestion?.['qType'] !== 'drag-n-drop-ranking-column' && editQuestion?.['qType'] !== 'multiple-select'"
                             value="Median"
                             [selected]="
                               op?.median == 1 && (op.net | json) != '{}'
@@ -1692,7 +1905,7 @@
                           >
                             Median
                           </option>
-                          <option
+                          <option *ngIf="editQuestion?.['qType'] !== 'grid-row-multiple-select' && editQuestion?.['qType'] !== 'grid-column-multiple-select' && editQuestion?.['qType'] !== 'ranking' && editQuestion?.['qType'] !== 'drag-n-drop-ranking' && editQuestion?.['qType'] !== 'drag-n-drop-ranking-column' && editQuestion?.['qType'] !== 'multiple-select'"
                             value="Standard Deviation"
                             [selected]="
                               op?.stdev == 1 && (op.net | json) != '{}'
