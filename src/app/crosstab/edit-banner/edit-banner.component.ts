@@ -62,7 +62,6 @@ export class EditBannerComponent implements OnChanges {
     this.segmentForm = this.fb.group({
       segmentItems: this.fb.array([])
     });
-    console.log(this.masterData)
     if (this.masterData["bannerInfo"]["bannerID"]) {
       this.loaderService.show();
       let bannerJsn = {

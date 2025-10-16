@@ -408,7 +408,6 @@ export class SystemService {
     }
     else {
       this.loaderService.hide();
-      console.log(error)
       // this.toastr.error(error.error.header.message, '');
     }
   }
