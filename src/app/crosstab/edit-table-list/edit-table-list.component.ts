@@ -71,7 +71,7 @@ export class EditTableListComponent implements OnInit {
   fullTableList = [];
   loadCounter = 0;
   loading = false;
-  perPage = 20;
+  perPage = 50;
   low_base_sample_value: any = environment.SAMPLE_BASE;
   constructor(private http: HttpClient, private fb: FormBuilder, public systemSr: SystemService,
     private el: ElementRef, private router: Router, private httpService: HttpService,
@@ -390,7 +390,7 @@ export class EditTableListComponent implements OnInit {
     const target = event.target as HTMLElement;
 
     // Check if the user has scrolled to the bottom
-    const isAtBottom = target.scrollHeight - target.scrollTop - 30 <= target.clientHeight;
+    const isAtBottom = target.scrollHeight - target.scrollTop - 50 <= target.clientHeight;
     console.log(isAtBottom, this.loading, target.scrollHeight, target.scrollTop, target.clientHeight);
     // Call the loadMoreItems function only when at the bottom and not already loading
     if (isAtBottom && this.loading == false) {
