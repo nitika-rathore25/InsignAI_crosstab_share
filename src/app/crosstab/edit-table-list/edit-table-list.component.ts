@@ -68,6 +68,10 @@ export class EditTableListComponent implements OnInit {
   qType: any;
   saved_banner_list = [];
   banner_group_list = [];
+  fullTableList = [];
+  loadCounter = 0;
+  loading = false;
+  perPage = 50;
   low_base_sample_value: any = environment.SAMPLE_BASE;
   constructor(private http: HttpClient, private fb: FormBuilder, public systemSr: SystemService,
     private el: ElementRef, private router: Router, private httpService: HttpService,
@@ -85,7 +89,7 @@ export class EditTableListComponent implements OnInit {
 
       this.masterData["bannerInfo"] = updatedBannerInfo;
       this.settingList = updatedBannerInfo;
-     
+
       if (this.settingList.bannerPoint.length > 0) {
         this.banner_group_list = [];
         this.saved_banner_list = [];
@@ -117,58 +121,120 @@ export class EditTableListComponent implements OnInit {
         };
 
         this.httpService.callApi('bannerTableList', { body: bannerJsn }).subscribe((response) => {
-          if (response?.header?.code === 200) {
+          // if (response?.header?.code === 200) {
+          //   this.tableLocalData = this.systemSr.getBannerData();
+          //   this.tableList = this.tableLocalData?.tableLoaded ?? response.response;
+          //   this.tableList.forEach(obj => {
+          //     obj.description = obj.description.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+          //   });
+
+          //   this.httpService.callApi('allTableQuesList', { body: bannerJsn }).subscribe((response) => {
+          //     if (response?.header?.code === 200) {
+          //       this.tableQuestionList = response.response;
+
+          //       const studyJsonSet = {
+          //         studyID: this.masterData['urlStudyId']
+          //       };
+
+          //       this.httpService.callApi('crossTabList', { body: studyJsonSet }).subscribe((response) => {
+          //         if (response?.header?.code === 200 && response.response) {
+          //           this.bannerList = response.response;
+
+          //           const selectedBanner = this.bannerList.find(b => b.bannerID === this.settingList.bannerID);
+          //           if (selectedBanner) {
+          //             this.settingList = {
+          //               ...this.settingList,
+          //               statGroup: selectedBanner.statGroup,
+          //               tb_enabled: selectedBanner.tb_enabled,
+          //               count: selectedBanner.count,
+          //               percent: selectedBanner.percent,
+          //               description: selectedBanner.description,
+          //               title: selectedBanner.title
+          //             };
+          //           }
+
+          //           this.loaderService.hide();
+
+          //           if (!this.tableLocalData) {
+          //             this.getTableLogicData();
+          //           } else {
+          //             this.el.nativeElement.querySelector("#showToast").classList.remove("show");
+          //           }
+          //         }
+          //       });
+          //     }
+          //   });
+          // }
+          if (response?.header?.code == 200) {
             this.tableLocalData = this.systemSr.getBannerData();
-            this.tableList = this.tableLocalData?.tableLoaded ?? response.response;
-            this.tableList.forEach(obj => {
-              obj.description = obj.description.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-            });
-
-            this.httpService.callApi('allTableQuesList', { body: bannerJsn }).subscribe((response) => {
-              if (response?.header?.code === 200) {
-                this.tableQuestionList = response.response;
-
-                const studyJsonSet = {
-                  studyID: this.masterData['urlStudyId']
-                };
-
-                this.httpService.callApi('crossTabList', { body: studyJsonSet }).subscribe((response) => {
-                  if (response?.header?.code === 200 && response.response) {
-                    this.bannerList = response.response;
-
-                    const selectedBanner = this.bannerList.find(b => b.bannerID === this.settingList.bannerID);
-                    if (selectedBanner) {
-                      this.settingList = {
-                        ...this.settingList,
-                        statGroup: selectedBanner.statGroup,
-                        tb_enabled: selectedBanner.tb_enabled,
-                        count: selectedBanner.count,
-                        percent: selectedBanner.percent,
-                        description: selectedBanner.description,
-                        title: selectedBanner.title
-                      };
-                    }
-
-                    this.loaderService.hide();
-
-                    if (!this.tableLocalData) {
-                      this.getTableLogicData();
-                    } else {
-                      this.el.nativeElement.querySelector("#showToast").classList.remove("show");
-                    }
-                  }
-                });
+            if (this.tableLocalData != undefined) {
+              if (this.tableLocalData["tableLoaded"] != undefined) {
+                this.fullTableList = response["response"];
+                this.loadCounter = 1;
+                this.tableList = this.tableLocalData["tableLoaded"].slice(0, this.perPage);
               }
-            });
+              else {
+                this.fullTableList = response["response"];
+                this.loadCounter = 1;
+                this.tableList = response["response"].slice(0, this.perPage);
+              }
+            }
+            else {
+              this.fullTableList = response["response"];
+              this.loadCounter = 1;
+              this.tableList = response["response"].slice(0, this.perPage);
+            }
+
+
+            this.getQuestionListing(bannerJsn)
           }
         });
-       
+
       } else {
         this.navigateUrl("edit-banner");
       }
     });
   }
-  
+
+
+  getQuestionListing(bannerJsn: any) {
+    this.httpService.callApi('allTableQuesList', { body: bannerJsn }).subscribe((response) => {
+      let viewResp = response["header"]["code"];
+      if (viewResp == 200) {
+        this.tableQuestionList = response["response"];
+        let studyJsonSet = {
+          "studyID": this.masterData['urlStudyId']
+        }
+        this.httpService.callApi('crossTabList', { body: studyJsonSet }).subscribe((response) => {
+          let viewResp = response["header"]["code"];
+          if (viewResp == 200) {
+            if (response["response"]) {
+              this.bannerList = response["response"];
+              response["response"].forEach(ban => {
+                if (ban.bannerID == this.settingList.bannerID) {
+                  this.settingList["statGroup"] = ban.statGroup;
+                  this.settingList["tb_enabled"] = ban.tb_enabled;
+                  this.settingList["count"] = ban.count;
+                  this.settingList["percent"] = ban.percent;
+                  this.settingList["description"] = ban.description;
+                  this.settingList["title"] = ban.title;
+                }
+              });
+
+              this.loaderService.hide();
+              if (this.tableLocalData == undefined) {
+                this.getTableLogicData();
+              }
+              else {
+                this.el.nativeElement.querySelector("#showToast").classList.remove("show");
+              }
+            }
+          }
+        });
+      }
+    });
+  }
+
 
 
   callBannerPoints(): Promise<any> {
@@ -182,7 +248,7 @@ export class EditTableListComponent implements OnInit {
         if (!bannerList.length) return resolve(null);
         const matched = bannerList.find(b => b.bannerID === this.masterData["bannerInfo"]["bannerID"]);
         if (!matched) {
-          this.router.navigate(['']); 
+          this.router.navigate(['']);
           return resolve(null);
         }
 
@@ -210,55 +276,133 @@ export class EditTableListComponent implements OnInit {
       });
     });
   }
-  
-  
+
+
+
+  // async getTableLogicData() {
+  //   let headers = this.systemSr.getMasterToken();
+  //   if (this.masterData["bannerInfo"] != undefined) {
+  //     if (this.masterData["bannerInfo"]["bannerPoint"].length > 0 && this.tableList.length > 0) {
+  //       this.el.nativeElement.querySelector("#showToast").classList.add("show");
+  //     }
+  //   }
+  //   this.apiCounter = 0;
+  //   this.progress = 0;
+  //   this.tableList.forEach(async (list) => {
+  //     let urlOne = this.systemSr.urlsService.url + '/crosstabShare/tableList/output/' + this.masterData["bannerInfo"]["bannerID"] + "/" + list.tableID;
+  //     const promise = this.http.post(urlOne, { "switchKey": this.masterData['token'], "studyID": this.masterData['urlStudyId'] }).toPromise()
+  //     promise.then(async (resp) => {
+  //       let dRsp = await resp["header"]["code"];
+  //       if (dRsp == 200) {
+  //         if (list.tableID == resp["response"]["tableID"]) {
+  //           list["row_data"] = resp["response"];
+  //           list["row_data"]._row_order.forEach(ro => {
+  //             list["row_data"]._rows[ro] = list["row_data"]._rows[ro].replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+  //           });
+  //           list["banner_points"] = this.masterData["bannerInfo"]["bannerPoint"];
+  //           this.apiCounter += 1;
+  //           this.progress = Math.round((this.apiCounter / this.tableList.length) * 100);
+  //           if (this.progress == 100) {
+  //             setTimeout(() => {
+  //               if (this.masterData["bannerInfo"] != undefined) {
+  //                 if (this.apiCounter == this.tableList.length) {
+  //                   this.el.nativeElement.querySelector("#showToast").classList.remove("show");
+  //                   this.tableLocalData = {};
+  //                   this.tableLocalData["tableLoaded"] = this.tableList;
+  //                   this.tableLocalData = this.systemSr.encryptData(this.tableLocalData);
+  //                   let nameLocal = this.masterData["bannerInfo"]["bannerID"] + this.systemSr.encFrData();
+  //                   localStorage.setItem(nameLocal, JSON.stringify(this.tableLocalData));
+  //                 }
+  //               }
+  //             }, 5000);
+  //           }
+  //         }
+  //       }
+  //       else {
+  //         this.systemSr.postError(resp);
+  //       }
+  //     }, (error) => {
+  //       this.systemSr.confirmartion(error);
+  //     });
+  //   });
+  // }
+
 
   async getTableLogicData() {
-    let headers = this.systemSr.getMasterToken();
     if (this.masterData["bannerInfo"] != undefined) {
       if (this.masterData["bannerInfo"]["bannerPoint"].length > 0 && this.tableList.length > 0) {
         this.el.nativeElement.querySelector("#showToast").classList.add("show");
       }
     }
-    this.apiCounter = 0;
-    this.progress = 0;
-    this.tableList.forEach(async (list) => {
-      let urlOne = this.systemSr.urlsService.url + '/crosstabShare/tableList/output/' + this.masterData["bannerInfo"]["bannerID"] + "/" + list.tableID;
-      const promise = this.http.post(urlOne, { "switchKey": this.masterData['token'], "studyID": this.masterData['urlStudyId'] }).toPromise()
-      promise.then(async (resp) => {
-        let dRsp = await resp["header"]["code"];
-        if (dRsp == 200) {
-          if (list.tableID == resp["response"]["tableID"]) {
-            list["row_data"] = resp["response"];
-            list["row_data"]._row_order.forEach(ro => {
-              list["row_data"]._rows[ro] = list["row_data"]._rows[ro].replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-            });
-            list["banner_points"] = this.masterData["bannerInfo"]["bannerPoint"];
-            this.apiCounter += 1;
-            this.progress = Math.round((this.apiCounter / this.tableList.length) * 100);
-            if (this.progress == 100) {
-              setTimeout(() => {
-                if (this.masterData["bannerInfo"] != undefined) {
-                  if (this.apiCounter == this.tableList.length) {
-                    this.el.nativeElement.querySelector("#showToast").classList.remove("show");
-                    this.tableLocalData = {};
-                    this.tableLocalData["tableLoaded"] = this.tableList;
-                    this.tableLocalData = this.systemSr.encryptData(this.tableLocalData);
-                    let nameLocal = this.masterData["bannerInfo"]["bannerID"] + this.systemSr.encFrData();
-                    localStorage.setItem(nameLocal, JSON.stringify(this.tableLocalData));
+    // this.apiCounter = 0;
+    // this.progress = 0;
+    this.loading = true;
+    // this.apiCounter = ((this.loadCounter - 1) * this.perPage);
+    console.log(this.apiCounter, this.tableList)
+    this.tableList.forEach((list, i) => {
+      if ((i >= (this.loadCounter - 1) * this.perPage) && (i < this.loadCounter * this.perPage)) {
+        let urlOne = this.systemSr.urlsService.urlCrosstab + '/tableList/output/' + this.masterData["bannerInfo"]["bannerID"] + "/" + list.tableID;
+        const promise = this.http.post(urlOne, { "switchKey": this.masterData['token'], "studyID": this.masterData['urlStudyId'] }).toPromise();
+        promise.then((resp) => {
+          let dRsp = resp["header"]["code"];
+          if (dRsp == 200) {
+            if (list.tableID == resp["response"]["tableID"]) {
+              list["row_data"] = resp["response"];
+              list["banner_points"] = this.masterData["bannerInfo"]["bannerPoint"];
+              this.apiCounter += 1;
+              console.log(this.apiCounter, this.fullTableList.length)
+
+              this.progress = Math.round((this.apiCounter / this.fullTableList.length) * 100);
+
+              if (this.apiCounter >= this.tableList.length) {
+                this.loading = false;
+              }
+              // console.log(this.tableList)
+              if (this.progress == 100) {
+                setTimeout(() => {
+                  if (this.masterData["bannerInfo"] != undefined) {
+                    if (this.tableList.length > 0 && this.apiCounter == this.tableList.length && this.tableList.length > 0) {
+                      this.el.nativeElement.querySelector("#showToast").classList.remove("show");
+                      this.tableLocalData = {};
+                      this.tableLocalData["tableLoaded"] = this.tableList;
+                      this.tableLocalData = this.systemSr.encryptData(this.tableLocalData);
+                      let nameLocal = this.masterData["bannerInfo"]["bannerID"] + this.systemSr.encFrData();
+                      localStorage.setItem(nameLocal, JSON.stringify(this.tableLocalData));
+                    }
                   }
-                }
-              }, 5000);
+
+                }, 5000);
+              }
             }
           }
-        }
-        else {
-          this.systemSr.postError(resp);
-        }
-      }, (error) => {
-        this.systemSr.confirmartion(error);
-      });
+          else {
+            this.systemSr.postError(resp);
+          }
+        }, (error) => {
+          this.systemSr.confirmartion(error);
+        });
+      }
     });
+  }
+
+
+  onScrollDown(e: any) {
+    const target = event.target as HTMLElement;
+
+    // Check if the user has scrolled to the bottom
+    const isAtBottom = target.scrollHeight - target.scrollTop - 50 <= target.clientHeight;
+    console.log(isAtBottom, this.loading, target.scrollHeight, target.scrollTop, target.clientHeight);
+    // Call the loadMoreItems function only when at the bottom and not already loading
+    if (isAtBottom && this.loading == false) {
+      console.log(this.loadCounter * this.perPage, this.fullTableList.length);
+      if (this.loadCounter * this.perPage < this.fullTableList.length) {
+        this.loadCounter += 1;
+        const nextItems = this.fullTableList.slice((this.loadCounter - 1) * this.perPage, this.loadCounter * this.perPage);
+        this.tableList.push(...nextItems);
+        console.log(this.tableList)
+        this.getTableLogicData();
+      }
+    }
   }
 
   navigateUrl(url) {
@@ -392,7 +536,7 @@ export class EditTableListComponent implements OnInit {
     let error = 0;
     let logicalArray = [];
 
-     this.el.nativeElement.querySelectorAll("div.banner_logical").forEach((element, k) => {
+    this.el.nativeElement.querySelectorAll("div.banner_logical").forEach((element, k) => {
       let stringOp = "";
       let logicalStringOp = {};
       element.querySelectorAll(".banner-parent-class-logic").forEach((parent, i) => {
