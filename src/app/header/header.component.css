@@ -1,4 +1,3 @@
-
 .header-main {
     background-color: #fff;
     width: 100%;
@@ -26,9 +25,10 @@
     box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
     border: 0px solid #e9ecef;
     font-size: 14px;
-    top: -17px!important;
-    left: -12%!important;
+    top: -17px !important;
+    left: -12% !important;
 }
+
 .dropdown-menu::after {
     content: '';
     width: 13px;
@@ -41,29 +41,35 @@
     border-top: 1px solid #ddd;
     border-left: 1px solid #ddd;
 }
+
 .dropdown-menu i {
     vertical-align: text-bottom;
     margin-right: 10px;
 }
-.fnt-18{
+
+.fnt-18 {
     font-size: 18px;
 }
-.fnt-17{
+
+.fnt-17 {
     font-size: 17px;
 }
 
 .ds_file::after {
     display: none;
 }
+
 .ds_file {
-    top: -27px !important;;
+    top: -27px !important;
+    ;
 }
 
 .ins_file::after {
     display: none;
 }
+
 .ins_file {
-    left: -16px!important;
+    left: -16px !important;
     top: -88px !important;
 }
 
@@ -92,61 +98,71 @@
     opacity: 0;
 }
 
-.s_ds{
+.s_ds {
     border: 2px solid #fff;
     border-radius: 4px;
 }
 
-.s_ds:hover{
+.s_ds:hover {
     border: 2px solid #522181;
     border-radius: 4px;
 }
 
 .s_ds:hover i {
-    display: inline-block!important;
+    display: inline-block !important;
 }
-.elip_s{
-    right:-28px;
-    position:relative;
+
+.elip_s {
+    right: -28px;
+    position: relative;
     font-size: 1.2rem;
     top: -35px;
     color: #522181;
 }
 
-.elip_s_file{
-    right:-36px;
-    position:relative;
+.elip_s_file {
+    right: -36px;
+    position: relative;
     font-size: 1.2rem;
     top: -24px;
     color: #522181;
 }
+
 .clr_bl {
     color: #522181;
 }
-.nav{
-  background: #1a405c;
+
+.nav {
+    background: #fff;
     z-index: 999;
-    color: #fff!important;
-}
-h4{
-  color: white!important;
-}
-.white_clr{
-  color: white;
+    color: #1a405c !important;
 }
 
-.study_name{
+.clr_log {
+    color: #1a405c !important;
+}
+
+h4 {
+    color: #1a405c !important;
+}
+
+.white_clr {
+    color: white;
+}
+
+.study_name {
     min-width: 125px;
 }
+
 .font-size-label {
     font-size: 0.8rem;
     line-height: 1;
 }
 
-.fs_15{
-    font-size: 1.5rem!important;
-    }
+.fs_15 {
+    font-size: 1.5rem !important;
+}
 
-    .h_60{
-        height: 60px;
-    }
+.h_60 {
+    height: 60px;
+}

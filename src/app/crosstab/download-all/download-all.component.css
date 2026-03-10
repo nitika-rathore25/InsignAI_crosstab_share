@@ -6,6 +6,7 @@
     border-radius: 2px;
     color: #db9406;
 }
+
 .list_data ul {
     list-style-type: none;
     counter-reset: css-counters 0;
@@ -19,30 +20,117 @@
 .list_data .list-group-item {
     line-height: 1.25rem;
 }
+
 .down_not {
     cursor: not-allowed !important;
     opacity: 0.8;
-    color: #000!important;
+    color: #fff !important;
 }
+
 .sp_time {
     font-size: 14px;
     color: #8e8e8e;
     margin-left: 10px;
 }
+
 .clear_btn {
     border: 2px solid #e85245;
     color: #e85245;
 }
+
 .cl_btn {
     border: 2px solid #000;
     color: #000;
     padding: 5px 10px 5px 10px;
 }
+
 .clear_btn:hover {
     border: 2px solid #e85245;
-    color: var(--altColor2);
+    color: #fff;
     background-color: #e85245;
 }
+
 .bg_item {
     background-color: #e2e2e2;
+}
+
+
+
+.modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 12px 16px;
+}
+
+.close_icon {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.down_btn {
+    background: linear-gradient(to bottom, #6A8ED0, #71B0D9);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+
+
+.bin_btn:hover {
+    background: #a80505;
+}
+
+.close_icon {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.bin_btn {
+    background: #cf0707;
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.bin_btn:hover {
+    background: #a80505;
+}
+
+.close_icon {
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.italic_time {
+    font-style: italic;
+}
+
+.backdropOutput {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    z-index: 0;
+}
+
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: transparent !important;
+    color: #cf0707 !important;
+    box-shadow: none;
+}
+
+.dropdown-item:hover {
+    background-color: rgb(219, 219, 219) !important;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.bin_btn.dropdown-toggle::after {
+    display: none !important;
 }
