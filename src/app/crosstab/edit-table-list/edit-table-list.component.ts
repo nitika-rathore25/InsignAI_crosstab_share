@@ -1510,8 +1510,14 @@ export class EditTableListComponent implements OnInit {
     }
   }
 
-  changeBanner() {
-    let getId = this.el.nativeElement.querySelector("#get_banner_id").value;
+  changeBanner(type) {
+    let getId
+    if (type == 'overall') {
+      getId = this.bannerList[0].bannerID
+    }
+    if (type != 'overall') {
+      getId = this.el.nativeElement.querySelector("#get_banner_id").value;
+    }
     this.loaderService.show();
     let bannerJsn = {
       "studyID": this.masterData['urlStudyId'],

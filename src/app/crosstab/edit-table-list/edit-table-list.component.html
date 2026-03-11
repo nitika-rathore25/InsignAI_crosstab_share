@@ -8,19 +8,19 @@
 
 <app-insights-center *ngIf="systemSr?.insightsModal == true"></app-insights-center>
 
-<div class="px-5 overflow_X_hidden" style="margin-top: 2rem">
+<div class="px-5  pt-2 main_position">
   <div class="row">
     <div class="col-lg-12 p-0">
       <div class="col-lg-12">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-lg-12 px-1">
             <div class="row">
               <div class="col-lg-12">
                 <div class="card w-100 mb-2">
                   <div class="card-body p-0" style="padding: 0px !important">
-                    <div class="col-lg-12 ps-2 pe-2">
-                      <div class="row">
-                        <div class="col-lg-7 ms-4 mt-1">
+                    <div class="col-lg-12 pe-4 p_s">
+                      <div class="row align-items-center">
+                        <div class="col-lg-6 mt-1">
                           <h4 class="mt-1 ellip mb-0">
                             {{ masterData?.stdName | titlecase }}
                           </h4>
@@ -38,10 +38,94 @@
                             </div>
                           </div>
                         </div>
+                        <!-- RIGHT SECTION (MERGED + FIXED) -->
+                        <div class="col-lg-6 d-flex justify-content-end align-items-center flex-wrap">
 
-                        <div class="col-lg-3 mt_2 ps-0 pe-0 my-auto text-end" style="width: 322px">
+                          <!-- BUTTON GROUP -->
+                          <div class="d-flex align-items-center">
+                            <button class="btn st_green cursor_none ps-0">
+                              N={{ masterData?.completeCount }}
+                            </button>
+
+                            <button class="btn ps-0 st_green cursor_none pe-0 ms-2 me-3"
+                              *ngIf="masterData?.studyState != 'View Report'">
+                              Project Live
+                            </button>
+
+                            <button class="btn ps-0 clr_red cursor_none pe-0 ms-2 me-3"
+                              *ngIf="masterData?.studyState == 'View Report'">
+                              Project Closed
+                            </button>
+                            <i class="fa fa-refresh cursor-pointer  me-4 refresh_banner" title="Refresh Banner"
+                              (click)="changeBanner('overall')"></i>
+
+                            <button class="btn submit_btn d-none" title="Add new table" (click)="openAddModal()"
+                              *ngIf="tableList.length > 0 && masterData?.grp != 'ke'">
+                              <i class="fa fa-plus"></i>
+                            </button>
+
+                            <button class="btn submit_btn ms-2 border-0 d-none" style="background: #7d7c7c !important"
+                              title="Banner Settings" (click)="openSetModal()"
+                              *ngIf="tableList.length > 0 && masterData?.grp != 'ke'">
+                              <i class="fa fa-cogs"></i>
+                            </button>
+
+                            <button class="btn btn down_btn ms-2 me-2" data-bs-toggle="dropdown" id="cross_down"
+                              title="Export Banner tables" *ngIf="tableList.length > 0">
+                              <i class="fa fa-download"></i>
+                            </button>
+
+
+
+                            <div class="dropdown ms-2">
+                              <div class="dropdown-menu btn_cross">
+                                <li>
+                                  <a class="dropdown-item cursor-pointer mt-1" (click)="downloadExcel('overall')">
+                                    <i class="fa fa-file-excel-o"></i>
+                                    <span>Export Banner</span>
+                                  </a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item cursor-pointer mt-1" (click)="getDownloadHistory()">
+                                    <i class="fa fa-download"></i>
+                                    <span>All Exports</span>
+                                  </a>
+                                </li>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <!-- SELECT -->
+                          <div class="" *ngIf="bannerList?.length > 1">
+                            <select class="form-select form-select-sm cursor-pointer" id="get_banner_id" #bannerSelect
+                              (change)="changeBanner(''); bannerSelect.value=''">
+
+                              <option value="" selected disabled hidden>
+                                Select Banner
+                              </option>
+
+                              <ng-container *ngFor="let ban of bannerList">
+                                <option *ngIf="ban.tb_enabled == 1 && masterData?.bannerInfo?.bannerID != ban.bannerID"
+                                  [value]="ban.bannerID">
+                                  {{ ban.title | titlecase }}
+                                </option>
+                              </ng-container>
+
+                            </select>
+                          </div>
+
+                          <!-- SAVE BUTTON -->
+                          <button class="btn segment_save ms-2 submit_btn" *ngIf="tableList.length == 0"
+                            title="Save question to table" (click)="saveQuestion()">
+                            <i class="fa fa-save"></i> Save Question
+                          </button>
+
+                        </div>
+
+                        <!-- <div class="col-lg-3 mt_2 ps-0 pe-0 my-auto text-end" style="width: 322px">
                           <button class="btn btn down_btn ms-2 me-2" data-bs-toggle="dropdown" id="cross_down"
-                            title="Click to download all tables" *ngIf="tableList.length > 0">
+                            title="Export Banner tables" *ngIf="tableList.length > 0">
                             <i class="fa fa-download"></i>
                           </button>
 
@@ -62,12 +146,12 @@
                             <div class="dropdown-menu btn_cross">
                               <li>
                                 <a class="dropdown-item cursor-pointer mt-1" (click)="downloadExcel('overall')">
-                                  <i class="fa fa-file-excel-o"></i><span>Download All</span>
+                                  <i class="fa fa-file-excel-o"></i><span>Export Banner</span>
                                 </a>
                               </li>
                               <li>
                                 <a class="dropdown-item cursor-pointer mt-1" (click)="getDownloadHistory()">
-                                  <i class="fa fa-download"></i><span>Download History</span>
+                                  <i class="fa fa-download"></i><span>All Exports</span>
                                 </a>
                               </li>
                             </div>
@@ -95,7 +179,7 @@
                             title="Save question to table" (click)="saveQuestion()">
                             <i class="fa fa-save"></i> Save Question
                           </button>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -187,11 +271,11 @@
                                   <span class="pull-end" *ngIf="ques?.row_data">
                                     <i class="fa fa-refresh edit_icon mr_3  cursor-pointer add_{{
                                                                   ques.qID
-                                                                }}" title="Click to reload: {{ ques.qID }}"
+                                                                }}" title="Reload: {{ ques.qID }}"
                                       (click)="reloadTable(ques)"></i>
                                     <i class="fa fa-download clr_yellow edit_icon cursor-pointer add_{{
                                                                   ques.qID
-                                                                }}" title="Click to download: {{ ques.qID }}"
+                                                                }}" title="Export: {{ ques.qID }}"
                                       (click)="downloadCrosstab(ques, 'single')"></i>
                                     <i class="fa fa-pencil-square-o edit_icon cursor-pointer clr_blue d-none"
                                       title="Click to edit: {{ ques.qID }}" (click)="editQuestionModal(ques)"
