@@ -1081,7 +1081,7 @@ export class CrosstabComponent implements OnInit {
       this.loaderService.hide();
       if (viewResp == 200) {
         let pid = response["response"]["pid"];
-        this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
+        this.toastr.info("Please wait. Your file is being prepared for download, kindly visit all exports", '');
         if (pid) {
           this.el.nativeElement.querySelector("#down_" + list.bannerID).classList.remove("d_op");
           this.downloadProcess(pid, '.xlsx', list);

@@ -1510,8 +1510,14 @@ export class EditTableListComponent implements OnInit {
     }
   }
 
-  changeBanner() {
-    let getId = this.el.nativeElement.querySelector("#get_banner_id").value;
+  changeBanner(type) {
+    let getId
+    if (type == 'overall') {
+      getId = this.bannerList[0].bannerID
+    }
+    if (type != 'overall') {
+      getId = this.el.nativeElement.querySelector("#get_banner_id").value;
+    }
     this.loaderService.show();
     let bannerJsn = {
       "studyID": this.masterData['urlStudyId'],
@@ -1689,7 +1695,7 @@ export class EditTableListComponent implements OnInit {
       this.loaderService.hide();
       if (viewResp == 200) {
         let pid = response["response"]["pid"];
-        this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
+        this.toastr.info("Please wait. Your file is being prepared for download, kindly visit all exports", '');
         if (pid) {
           this.el.nativeElement.querySelector("#cross_down").classList.remove("d_op");
           this.downloadProcess(pid, '.xlsx', '', number);
@@ -1725,7 +1731,7 @@ export class EditTableListComponent implements OnInit {
       this.loaderService.hide();
       if (viewResp == 200) {
         let pid = response["response"]["pid"];
-        this.toastr.info("Please wait. Your file is being prepared for download, kindly visit download history", '');
+        this.toastr.info("Please wait. Your file is being prepared for download, kindly visit all exports", '');
         if (pid) {
           this.el.nativeElement.querySelector(".add_" + list.qID).classList.remove("d_op");
           this.downloadProcess(pid, '.xlsx', list, number);
