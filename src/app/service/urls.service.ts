@@ -32,22 +32,22 @@ export class UrlsService {
 
     else if (environment.production == true) {
       this.masterUrl = environment.baseUrlProd;
-      this.url = environment.baseUrlProd + '/services';
-      this.urlCrosstab = environment.baseUrlProd + '/services/crosstabShare';
-      this.urlOutput = environment.baseUrlProd + '/services/outputShare';
-      this.userApi = environment.baseUrlProd + '/services';
+      this.url = environment.baseUrlProd;
+      this.urlCrosstab = environment.baseUrlProd + '/crosstabShare';
+      this.urlOutput = environment.baseUrlProd + '/outputShare';
+      this.userApi = environment.baseUrlProd;
       this.sampleUrl = environment.baseUrlProd + '/e451-demo';
-      this.fileUrl = environment.baseUrlProd + '/services';
+      this.fileUrl = environment.baseUrlProd;
     }
 
     else if (environment.development == true) {
       this.masterUrl = environment.baseUrlDev;
-      this.url = environment.baseUrlDev + '/insign_ai_dev';
-      this.urlCrosstab = environment.baseUrlDev + '/insign_ai_dev/crosstabShare';
-      this.urlOutput = environment.baseUrlDev + '/insign_ai_dev/outputShare';
-      this.userApi = environment.baseUrlDev + '/insign_ai_dev/crosstabShare';
+      this.url = environment.baseUrlDev;
+      this.urlCrosstab = environment.baseUrlDev + '/crosstabShare';
+      this.urlOutput = environment.baseUrlDev + '/outputShare';
+      this.userApi = environment.baseUrlDev + '/crosstabShare';
       this.sampleUrl = environment.baseUrlDev + '/e451-demo';
-      this.fileUrl = environment.baseUrlDev + '/insign_ai_dev';
+      this.fileUrl = environment.baseUrlDev;
     }
 
 
